@@ -44,7 +44,7 @@ class SendEmail(object):
         while result is False and num < 3:
             try:
                 global log_dir, zip_path
-                log_dir = Common.get_log_path()  # 获取存储日志的目录
+                log_dir = self.common.get_result_path()  # 获取存储日志的目录
                 file_list = os.listdir(log_dir)  # 获取目录下的文件列表
                 zip_path = log_dir + ".zip"  # 设置存放zip的路径
 
@@ -130,7 +130,7 @@ class SendEmail(object):
             try:
                 # 添加附件
                 global log_dir
-                log_dir = Common.get_log_path()  # 获取存储日志的目录
+                log_dir = self.common.get_result_path()  # 获取存储日志的目录
                 file_list = os.listdir(log_dir)  # 获取目录下的文件列表
                 principal_name_list = []  # 错误负责人list
                 for file in file_list:

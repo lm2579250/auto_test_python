@@ -64,5 +64,5 @@ if __name__ == "__main__":
     # 提取错误日志
     run.my_log.extraction_error_log()
     # 发送email
-    # run.send_email.with_zip()
+    run.send_email.with_zip()
 
