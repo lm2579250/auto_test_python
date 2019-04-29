@@ -14,11 +14,10 @@ from selenium.webdriver.support import expected_conditions as ec
 
 class BasePage(object):
     """页面元素基本操作,page module"""
-
-    # web用例编号，web_driver用于标记web用例，app_driver用于标记APP用例
-    web_case_num = 0
-    web_driver = None
-    app_driver = None
+    web_case_num = 0  # web用例编号
+    web_driver = None  # 用于标记web用例
+    app_driver = None  # 用于标记APP用例
+    current_driver = ""  # 用于标记当前是web端还是APP端的用例
     _instance_lock = threading.Lock()  # 设置单例锁
 
     def __new__(cls, *args, **kwargs):
@@ -57,8 +56,7 @@ class BasePage(object):
                             # 'chromeOptions': {'androidProcess': android_process}
                             }
             self.app_driver = appium.webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
-            global current_driver  # 用于标记是web端还是APP端的用例，以便后边方法调用
-            current_driver = "app_driver"  # 标记为APP端用例
+            self.current_driver = "app_driver"  # 标记为APP端用例
             self.switch_context()  # H5时需要切换context
         except Exception as e:
             self.log.error("打开app时异常 %s" % e)
@@ -76,8 +74,7 @@ class BasePage(object):
             else:
                 raise Exception(self.log.error("没有找到浏览器 %s, 你可以输入'Chrome，Firefox or Ie'" % browser))
             self.web_driver = driver
-            global current_driver  # 用于标记是web端还是APP端的用例，以便后边方法调用
-            current_driver = "web_driver"  # 标记为web端用例
+            self.current_driver = "web_driver"  # 标记为web端用例
             self.web_driver.maximize_window()
         except Exception as e:
             self.log.error("打开%s浏览器时异常 %s" % (browser, e))
@@ -97,14 +94,14 @@ class BasePage(object):
 
     def refresh(self):
         """刷新页面"""
-        if current_driver == "web_driver":
+        if self.current_driver == "web_driver":
             self.web_driver.refresh()
         else:
             self.swipe_down()
 
     def back(self):
         """返回上一页"""
-        if current_driver == "web_driver":
+        if self.current_driver == "web_driver":
             self.web_driver.back()
         else:
             self.app_driver.keyevent(4)
@@ -113,7 +110,7 @@ class BasePage(object):
     def quit(self):
         """退出程序"""
         try:
-            if current_driver == "web_driver":
+            if self.current_driver == "web_driver":
                 self.web_driver.quit()
             else:
                 # H5时用
@@ -296,7 +293,7 @@ class BasePage(object):
             line_number = sys._getframe().f_back.f_lineno
 
             path = self.common.get_result_path(case_name, "%s %s %s.png" % (current_time, func_name, line_number))
-            if current_driver == "web_driver":  # web端直接截图
+            if self.current_driver == "web_driver":  # web端直接截图
                 self.web_driver.get_screenshot_as_file(path)
             else:  # 移动端截图
                 contexts = self.app_driver.contexts  # 获取所有的context
@@ -348,7 +345,7 @@ class BasePage(object):
             key = elements[0]  # 定位方式
             value = elements[1]  # 值
 
-            if current_driver == "web_driver":  # web定位
+            if self.current_driver == "web_driver":  # web定位
                 if key == "css_selector":
                     elem = self.web_driver.find_elements_by_css_selector(value)[tag]
                 elif key == "xpath":
@@ -402,7 +399,7 @@ class BasePage(object):
             key = elements[0]
             value = elements[1]
 
-            if current_driver == "web_driver":  # web查找元素
+            if self.current_driver == "web_driver":  # web查找元素
                 if key == "css_selector":
                     elem = self.web_driver.find_elements_by_css_selector(value)
                 elif key == "xpath":
@@ -474,7 +471,7 @@ class BasePage(object):
             elif key == "tag_name":
                 locator = (By.TAG_NAME, value)
 
-            if current_driver == "web_driver":
+            if self.current_driver == "web_driver":
                 WebDriverWait(self.web_driver, 20, 0.5).until(ec.presence_of_element_located(locator),
                                                               "%s元素未出现！" % str(element))
             else:
