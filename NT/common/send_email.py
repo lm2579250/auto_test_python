@@ -219,5 +219,5 @@ class SendEmail(object):
                     shutil.rmtree(path)
                     i -= 1
         except Exception as e:
-            self.log.debug("删除result下文件夹时异常：%s" % e)
+            self.log.error("删除result下文件夹时异常：%s" % e)
             raise Exception

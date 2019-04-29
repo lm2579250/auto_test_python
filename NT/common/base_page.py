@@ -89,7 +89,7 @@ class BasePage(object):
             else:
                 raise Exception("URL地址错误！")
         except Exception as e:
-            self.log.debug("打开网址时异常 %s" % e)
+            self.log.error("打开网址时异常 %s" % e)
             raise Exception
 
     def refresh(self):
@@ -141,7 +141,7 @@ class BasePage(object):
                 time.sleep(1)
                 self.log.debug("等待 %s s %s" % (i, e))
         else:
-            self.log.debug("%s元素未出现！" % str(elements))
+            self.log.error("%s元素未出现！" % str(elements))
             raise Exception
 
     def input_tag(self, elements, text, tag=0, roll=False):
@@ -158,7 +158,7 @@ class BasePage(object):
                 time.sleep(1)
                 self.log.debug("等待 %s s %s" % (i, e))
         else:
-            self.log.debug("%s元素未出现！" % str(elements))
+            self.log.error("%s元素未出现！" % str(elements))
             raise Exception
 
     def get_text(self, *args, text="", tag=0):
@@ -181,7 +181,7 @@ class BasePage(object):
                     time.sleep(1)
                     self.log.debug("等待 %s s %s" % (i, e))
             else:
-                self.log.debug("%s元素未出现！" % str(param))
+                self.log.error("%s元素未出现！" % str(param))
                 raise Exception
         return value
 
@@ -196,7 +196,7 @@ class BasePage(object):
             context = self.app_driver.current_context  # 获取当前context
             self.log.debug("current_context: %s" % context)
         except Exception as e:
-            self.log.debug("切换context时异常： %s" % e)
+            self.log.error("切换context时异常： %s" % e)
             raise Exception
 
     def switch_handle(self, element):
@@ -210,7 +210,7 @@ class BasePage(object):
                     self.log.debug("切换handle")
             return self.displayed(element)
         except Exception as e:
-            self.log.debug("切换handle时异常 %s" % e)
+            self.log.error("切换handle时异常 %s" % e)
             raise Exception
 
     def home_page_to(self, module):
@@ -227,7 +227,7 @@ class BasePage(object):
                 result = True
             return result
         except Exception as e:
-            self.log.debug("从首页的待办事项进入%s时异常 %s" % (module, e))
+            self.log.error("从首页的待办事项进入%s时异常 %s" % (module, e))
             raise Exception
 
     def back_to(self, *args):
@@ -322,7 +322,7 @@ class BasePage(object):
                 case_name = api_case_name
                 self.log.debug("api用例%s：%s，负责人：%s" % (api_case_num, api_case_name, principal))
         except Exception as e:
-            self.log.debug("用例开始时异常 %s" % e)
+            self.log.error("用例开始时异常 %s" % e)
             raise Exception
 
     def case_end(self):
@@ -478,7 +478,7 @@ class BasePage(object):
                 WebDriverWait(self.app_driver, 20, 0.5).until(ec.presence_of_element_located(locator),
                                                               "%s元素未出现！" % str(element))
         except Exception as e:
-            self.log.debug("等待元素出现时异常 %s" % e)
+            self.log.error("等待元素出现时异常 %s" % e)
             raise Exception
 
     # def judgment(self, elements, tag=0):
@@ -489,7 +489,6 @@ class BasePage(object):
     #             self.find_elements_tag(elements, tag)
     #             return True
     #         except Exception as e:
-    #             self.log.debug(e)
     #             return False
 
         # 方式二（速度较慢）：
@@ -605,7 +604,7 @@ class BasePage(object):
                 if n == y1:
                     break
         except Exception as e:
-            self.log.debug("位置调整时异常 %s" % e)
+            self.log.error("位置调整时异常 %s" % e)
             raise Exception
         finally:
             self.app_driver.switch_to.context(current_context)  # 微调完成后切换为原来的环境

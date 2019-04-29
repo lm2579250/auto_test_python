@@ -34,7 +34,7 @@ class Run(object):
 
     def api_test(self):
         """api测试"""
-        # self.log.info("用例路径：%s" % self.cases_path)
+        # self.log.debug("用例路径：%s" % self.cases_path)
         # self.log.debug(self.cases_dict)
         # 生成所有用例解析函数类后导入TestCases
         from NT.cases.api.test_cases import APITestCases

@@ -49,7 +49,7 @@ class ConfigHTTP:
                         else:
                             params = json.loads(param_value)  # 将str转换为dict
 
-            self.log.info("预设超时时长：%s s" % timeout)
+            self.log.debug("预设超时时长：%s s" % timeout)
             response = None
             # 不验证ssl, verify=False
             if method == "get":
