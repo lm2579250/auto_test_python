@@ -55,7 +55,7 @@ class BasePage(object):
                             # 'app': app_address,
                             # 'chromeOptions': {'androidProcess': android_process}
                             }
-            self.app_driver = appium.webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
+            self.app_driver = appium.webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)  # 操作APP端元素的webdriver实例
             self.current_driver = "app_driver"  # 标记为APP端用例
             self.switch_context()  # H5时需要切换context
         except Exception as e:
@@ -73,7 +73,7 @@ class BasePage(object):
                 driver = selenium.webdriver.Ie()
             else:
                 raise Exception(self.log.error("没有找到浏览器 %s, 你可以输入'Chrome，Firefox or Ie'" % browser))
-            self.web_driver = driver
+            self.web_driver = driver  # 操作web端元素的webdriver实例
             self.current_driver = "web_driver"  # 标记为web端用例
             self.web_driver.maximize_window()
         except Exception as e:
