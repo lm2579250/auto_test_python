@@ -7,7 +7,7 @@ from NT.data import read_config
 
 
 class ConfigHTTP:
-    """接口请求底层方法实现"""
+    """配置http参数并请求"""
     _instance_lock = threading.Lock()  # 设置单例锁
 
     def __new__(cls, *args, **kwargs):

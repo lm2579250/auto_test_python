@@ -2,7 +2,6 @@ import time
 import random
 import unittest
 from NT.common.log import MyLog
-from NT.common.common import Common
 from NT.common.base_page import BasePage
 
 
@@ -10,7 +9,6 @@ class AppTechnicalOperation(unittest.TestCase):
     """技术操作"""
     def setUp(self):
         try:
-            self.common = Common()
             self.base_page = BasePage()
             self.log = MyLog().get_log().logger
         except Exception as e:
@@ -36,7 +34,7 @@ class AppTechnicalOperation(unittest.TestCase):
 
         try:
             # 用例开始，输入负责人姓名，必须
-            self.base_page.result_start("李彬")
+            self.base_page.case_start("李彬")
             self.assertIs(self.base_page.displayed(bottom_menu), True, "首页异常！")
             self.log.debug("进入[我的]")
             self.base_page.click_elem_tag(bottom_menu, tag=-1)
@@ -49,7 +47,7 @@ class AppTechnicalOperation(unittest.TestCase):
                 self.assertIs(self.base_page.displayed(operation_exam_menu), True, "进入[操作工具]异常！")
             else:
                 self.log.debug("没有[操作工具]选项，结束测试！")
-                self.base_page.result_pass()
+                self.base_page.case_pass()
                 return
             self.log.debug("进入[技术操作列表]")
             self.base_page.click_elem_tag(operation_exam_menu)
@@ -127,17 +125,17 @@ class AppTechnicalOperation(unittest.TestCase):
                 self.log.debug("本次考核成绩已提交！")
 
                 # 用例成功，必须
-                self.base_page.result_pass()
+                self.base_page.case_pass()
             else:
                 self.base_page.screen_shot()
                 raise Exception("页面显示异常！")
         except Exception as e:
             self.log.error(e)
             # 用例失败，必须
-            self.base_page.result_failed()
+            self.base_page.case_failed()
             raise Exception
         finally:
             self.base_page.back_to()
 
     def tearDown(self):
-        self.base_page.result_end()
+        self.base_page.case_end()

@@ -31,7 +31,7 @@ class AppLogin(unittest.TestCase):
 
         try:
             # 用例开始，输入负责人姓名，必须
-            self.base_page.result_start("李彬")
+            self.base_page.case_start("李彬")
 
             self.log.debug("打开app")
             self.base_page.open_app()
@@ -54,7 +54,7 @@ class AppLogin(unittest.TestCase):
                     # 打印弹框上的信息
                     self.base_page.popup()
                     self.log.debug("进入首页！")
-                    self.base_page.result_pass()
+                    self.base_page.case_pass()
                     break
                 # 有提示框(登录成功提示，自动交卷提示)
                 elif self.base_page.displayed(popup_title):
@@ -62,7 +62,7 @@ class AppLogin(unittest.TestCase):
                     self.base_page.popup()
                     self.base_page.back_to()  # 返回首页
                     self.log.debug("返回首页！")
-                    self.base_page.result_pass()
+                    self.base_page.case_pass()
                     break
                 # 处于答题页面
                 elif self.base_page.displayed(answer_sheet_elem):
@@ -76,21 +76,21 @@ class AppLogin(unittest.TestCase):
                     self.base_page.popup()
                     self.base_page.back_to()  # 返回首页
                     self.log.debug("返回首页！")
-                    self.base_page.result_pass()
+                    self.base_page.case_pass()
                     break
                 # 进入首页
                 elif self.base_page.displayed(bottom_menu):
                     self.base_page.screen_shot()
                     self.log.debug("进入首页！")
-                    self.base_page.result_pass()
+                    self.base_page.case_pass()
                     break
             else:
                 raise Exception("打开app时异常！")
         except Exception as e:
             self.log.error(e)
             # 用例失败，必须
-            self.base_page.result_failed()
+            self.base_page.case_failed()
             raise Exception
 
     def tearDown(self):
-        self.base_page.result_end()
+        self.base_page.case_end()

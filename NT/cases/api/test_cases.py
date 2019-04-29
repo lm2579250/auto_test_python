@@ -1,8 +1,8 @@
 import unittest
 from NT.common.log import MyLog
-from NT.common.common import Common
+# from NT.common.common import Common
 from NT.common.base_page import BasePage
-from NT.data.read_config import ReadConfig
+# from NT.data.read_config import ReadConfig
 from NT.common.config_http import ConfigHTTP
 
 
@@ -10,11 +10,11 @@ class APITestCases(unittest.TestCase):
     """api请求类"""
 
     def setUp(self):
-        self.config = ConfigHTTP()
+        self.http = ConfigHTTP()
         self.base_page = BasePage()
-        self.read_config = ReadConfig()
+        # self.read_config = ReadConfig()
         self.log = MyLog.get_log().logger
-        self.cases_path, self.cases_dict = Common().get_api_cases()
+        # self.cases_path, self.cases_dict = Common().get_api_cases()
 
     def execute_case(self, case_params, case_num, case_name):
         """api请求实现"""
@@ -22,7 +22,7 @@ class APITestCases(unittest.TestCase):
             # 从用例中提取负责人姓名
             principal = case_params["principal"]
             # 用例开始头部信息
-            self.base_page.result_start(principal, case_name, case_num)
+            self.base_page.case_start(principal, case_name, case_num)
             # 期望返回的文本内容和状态码
             msg, code = "", ""
 
@@ -34,7 +34,7 @@ class APITestCases(unittest.TestCase):
                     code = int(param_value)
 
             # 发起请求
-            response = self.config.send_url(case_params)
+            response = self.http.send_request(case_params)
 
             self.log.debug("是否请求成功：%s" % response.ok)  # 查看response.ok的布尔值判断是否请求成功
             self.log.debug("返回状态码：%s" % response.status_code)  # 失败请求(非200响应)抛出异常
@@ -58,13 +58,13 @@ class APITestCases(unittest.TestCase):
             self.assertEqual(code, actual_code, "code期望值：%s，实际值%s" % (code, actual_code))
 
             response.raise_for_status()  # 状态码不是200时抛出异常
-            self.base_page.result_pass()
+            self.base_page.case_pass()
         except Exception as e:
             self.log.error("%s" % e)
-            self.base_page.result_failed()
+            self.base_page.case_failed()
             raise Exception
         finally:
-            self.base_page.result_end()
+            self.base_page.case_end()
 
     def test_login_controller1(self):
         """用户名和密码都正确"""

@@ -2,7 +2,7 @@ import os
 import json
 import logging
 import threading
-from NT.data import read_config
+from NT.data.read_config import ReadConfig
 from NT.common.common import Common
 
 
@@ -82,7 +82,7 @@ class MyLog:
             error_log_path = self.common.get_result_path("error_log.log")
 
             # 从邮件的收件人信息中读取所有的负责人姓名，实现错误日志按人分类
-            cf = read_config.ReadConfig()
+            cf = ReadConfig()
             # 收件人列表str类型(姓名，邮箱)
             receivers = cf.get_email("receivers")
             # 收件人列表dict类型(姓名，邮箱)

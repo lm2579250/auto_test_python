@@ -216,7 +216,7 @@ class BasePage(object):
             self.log.debug("切换handle时异常 %s" % e)
             raise Exception
 
-    def home(self, module):
+    def home_page_to(self, module):
         """首页待办事项进入功能模块"""
         #  待办事项中的模块标签
         module_elem = ("xpath", "//span[contains(text(), '%s')]" % module)
@@ -311,7 +311,7 @@ class BasePage(object):
             self.log.error("截图保存时异常 %s" % e)
             raise Exception
 
-    def result_start(self, principal, api_case_name="", api_case_num=0):
+    def case_start(self, principal, api_case_name="", api_case_num=0):
         """用例开始,参数为负责人姓名，api测试名，api测试编号"""
         try:
             # 获取调用函数名作为截图文件夹名
@@ -328,16 +328,16 @@ class BasePage(object):
             self.log.debug("用例开始时异常 %s" % e)
             raise Exception
 
-    def result_end(self):
+    def case_end(self):
         """用例结束"""
         # "*"号不可改，用于提取错误日志
         self.log.debug("*" * 100 + "\n")
 
-    def result_pass(self):
+    def case_pass(self):
         """用例通过"""
         self.log.debug("=" * 10 + "%s: pass!" % case_name + "=" * 10)
 
-    def result_failed(self):
+    def case_failed(self):
         """用例失败"""
         # "failed!"不可修改，用于标记错误日志
         self.log.debug("=" * 10 + "%s: failed!" % case_name + "=" * 10)

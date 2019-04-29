@@ -19,22 +19,22 @@ class AppSurvey(unittest.TestCase):
         """app问卷调查"""
         try:
             # 用例开始，输入负责人姓名，必须
-            self.base_page.result_start("李彬")
+            self.base_page.case_start("李彬")
 
             if AppSurvey.enter(self) is False:  # 首页进入考试
                 # 如果没有可以考试的试卷就结束用例
-                self.base_page.result_pass()
+                self.base_page.case_pass()
                 return
 
             # 开始答题
             AppSurvey.answer(self)
 
             # 用例成功，必须
-            self.base_page.result_pass()
+            self.base_page.case_pass()
         except Exception as e:
             self.log.error(e)
             # 用例失败，必须
-            self.base_page.result_failed()
+            self.base_page.case_failed()
             raise Exception
         finally:
             self.base_page.back_to()
@@ -124,4 +124,4 @@ class AppSurvey(unittest.TestCase):
                 raise Exception
 
     def tearDown(self):
-        self.base_page.result_end()
+        self.base_page.case_end()

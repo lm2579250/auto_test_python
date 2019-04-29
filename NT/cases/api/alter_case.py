@@ -1,7 +1,6 @@
 import threading
 from NT.common.log import MyLog
 from NT.common.common import Common
-from NT.data.read_config import ReadConfig
 
 
 class AlterCase:
@@ -17,7 +16,6 @@ class AlterCase:
         return cls._instance
 
     def __init__(self):
-        self.read_config = ReadConfig()
         self.log = MyLog.get_log().logger
         self.cases_path, self.cases_dict = Common().get_api_cases()
 
