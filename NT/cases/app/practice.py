@@ -23,7 +23,7 @@ class AppPractice(unittest.TestCase):
 
             if not self.base_page.home_page_to("练习"):  # 判断待办事项中是否有练习
                 if AppPractice.enter(self) is False:  # 首页进入考试
-                    # 如果没有可以考试的试卷就结束用例
+                    # 如果没有练习试卷就结束用例
                     self.base_page.case_pass()
                     return
 

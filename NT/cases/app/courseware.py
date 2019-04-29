@@ -26,9 +26,9 @@ class AppCourseware(unittest.TestCase):
             # 用例开始，输入负责人姓名，必须
             self.base_page.case_start("李彬")
 
-            if not self.base_page.home_page_to("课程"):  # 判断待办事项中是否有练习
-                if AppCourseware.enter(self) is False:  # 首页进入考试
-                    # 如果没有可以考试的试卷就结束用例
+            if not self.base_page.home_page_to("课件"):  # 判断待办事项中是否有课件
+                if AppCourseware.enter(self) is False:  # 首页进入课件
+                    # 如果没有课件就结束用例
                     self.base_page.case_pass()
                     return
 

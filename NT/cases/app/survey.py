@@ -21,8 +21,8 @@ class AppSurvey(unittest.TestCase):
             # 用例开始，输入负责人姓名，必须
             self.base_page.case_start("李彬")
 
-            if AppSurvey.enter(self) is False:  # 首页进入考试
-                # 如果没有可以考试的试卷就结束用例
+            if AppSurvey.enter(self) is False:  # 首页进入问卷调查
+                # 如果没有有效的问卷调查就结束用例
                 self.base_page.case_pass()
                 return
 
