@@ -25,7 +25,7 @@ class WebLogin(unittest.TestCase):
         """web登录"""
         try:
             # 用例开始，输入负责人姓名，必须
-            self.base_page.result_start("乔一庭")
+            self.base_page.case_start("乔一庭")
 
             username_element = ("css_selector", "input.form-control.user")  # 用户名输入框定位信息
             password_element = ("css_selector", "input.form-control.psd")  # 密码输入框定位信息
@@ -53,11 +53,11 @@ class WebLogin(unittest.TestCase):
             self.base_page.screen_shot()
 
             # 用例成功，必须
-            self.base_page.result_pass()
+            self.base_page.case_pass()
         except Exception as e:
-            self.log.debug(e)
+            self.log.error(e)
             # 用例失败，必须
-            self.base_page.result_failed()
+            self.base_page.case_failed()
             raise Exception
 
     def tearDown(self):
@@ -69,4 +69,4 @@ class WebLogin(unittest.TestCase):
             raise Exception
         finally:
             # 用例结束，必须
-            self.base_page.result_end()
+            self.base_page.case_end()
