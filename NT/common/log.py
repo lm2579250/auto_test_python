@@ -74,7 +74,7 @@ class MyLog:
             raise Exception("MyLog.get_log异常 %s" % e)
 
     def extraction_error_log(self):
-        """按类提取错误日志"""
+        """按负责人提取错误日志"""
         try:
             # 生成原始日志文件路径
             log_path = self.common.get_result_path("log.log")
