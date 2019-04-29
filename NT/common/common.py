@@ -27,19 +27,19 @@ class Common(object):
 
             # 循环生成路径
             for value in args:
-                path = os.path.join(path, value).replace("\\", "/")
-                # 不存在则创建文件夹/文件
-                if not os.path.exists(path) and "." not in value:
+                path = os.path.join(path, value).replace("\\", "/")  # 拼接路径并将"\"替换为"/",value为文件名时则自动创建
+                # 不存在则创建文件夹
+                if not os.path.exists(path) and "." not in value:  # 排出文件名并判断路径是否存在，不存在则创建文件夹
                     os.mkdir(path)
             return path
         except Exception as e:
-            raise Exception("函数Common.get_path异常：%s" % e)
+            raise Exception("函数Common.get_path异常 %s" % e)
 
     def get_result_path(self, *args):
         """result目录下的日志，报告，截图路径"""
         # 自动生成result父目录和时间子目录，以及时间目录下的各级子目录
-        log_path = Common.get_path("result", self.start_time, *args)
-        return log_path
+        result_path = Common.get_path("result", self.start_time, *args)
+        return result_path
 
     @staticmethod
     def get_api_cases():

@@ -1,8 +1,6 @@
 import unittest
 from NT.common.log import MyLog
-# from NT.common.common import Common
 from NT.common.base_page import BasePage
-# from NT.data.read_config import ReadConfig
 from NT.common.config_http import ConfigHTTP
 
 
@@ -12,9 +10,7 @@ class APITestCases(unittest.TestCase):
     def setUp(self):
         self.http = ConfigHTTP()
         self.base_page = BasePage()
-        # self.read_config = ReadConfig()
         self.log = MyLog.get_log().logger
-        # self.cases_path, self.cases_dict = Common().get_api_cases()
 
     def execute_case(self, case_params, case_num, case_name):
         """api请求实现"""

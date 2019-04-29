@@ -10,7 +10,7 @@ import email.mime.multipart
 from email.header import Header
 from email.mime.application import MIMEApplication
 from NT.common.common import Common
-from NT.data import read_config
+from NT.data.read_config import ReadConfig
 from NT.common.log import MyLog
 
 
@@ -30,7 +30,7 @@ class SendEmail(object):
         try:
             self.common = Common()  # 实例化一个common调用公用函数
             self.log = MyLog().get_log().logger  # 实例化一个log打印日志
-            self.cf = read_config.ReadConfig()  # 实例化一个read_config读取email的配置信息
+            self.config = ReadConfig()  # 实例化一个read_config读取email的配置信息
             self.msg = email.mime.multipart.MIMEMultipart('alternative')  # 实例化一个email发送email
         except Exception as e:
             self.log.error("SendEmail.__init__异常 %s" % e)
@@ -59,14 +59,14 @@ class SendEmail(object):
                 # 从配置文件中读取发件人信息
                 sender_name = ""  # 发件人
                 sender_email = ""  # 发件箱
-                sender_dict = json.loads(self.cf.get_email("sender"))
+                sender_dict = json.loads(self.config.get_email("sender"))
                 for key, value in sender_dict.items():
                     sender_name = key
                     sender_email = value
 
                 # 从配置文件中读取收件人信息
                 # receivers内容为字典时使用(receivers = {"蓝梦":"597878110@qq.com", "孟冰":"597878110@qq.com")
-                receivers_dict = json.loads(self.cf.get_email("receivers"))
+                receivers_dict = json.loads(self.config.get_email("receivers"))
                 name_list = []  # 收件人list
                 receivers = []  # 收件箱list
                 for key, value in receivers_dict.items():
@@ -85,12 +85,12 @@ class SendEmail(object):
                 self.msg.attach(part)
                 # 邮件信息
                 name_list_str = ",".join(name_list)  # 收件人姓名，将list转换为str
-                mail_host = self.cf.get_email("email_host")  # 设置邮箱服务器域名
-                mail_port = self.cf.get_email("email_port")  # 设置邮箱服务器接口
-                mail_user = self.cf.get_email("email_user")  # 发件人用户名
-                mail_pass = self.cf.get_email("email_pass")  # 发件人口令
-                subject = self.cf.get_email("subject")  # 主题
-                content = self.cf.get_email("content")  # 正文
+                mail_host = self.config.get_email("email_host")  # 设置邮箱服务器域名
+                mail_port = self.config.get_email("email_port")  # 设置邮箱服务器接口
+                mail_user = self.config.get_email("email_user")  # 发件人用户名
+                mail_pass = self.config.get_email("email_pass")  # 发件人口令
+                subject = self.config.get_email("subject")  # 主题
+                content = self.config.get_email("content")  # 正文
                 if len(name_list_str) == 0:
                     self.log.debug("所有用例都正常通过！")
                 else:
@@ -158,13 +158,13 @@ class SendEmail(object):
                 # 从配置文件中读取邮件信息
                 sender_name = ""  # 发件人
                 sender_email = ""  # 发件箱
-                sender_dict = json.loads(self.cf.get_email("sender"))
+                sender_dict = json.loads(self.config.get_email("sender"))
                 for key, value in sender_dict.items():
                     sender_name = key  # 发件人
                     sender_email = value  # 发件箱
 
                 # receivers内容为字典时使用(receivers = {"蓝梦":"597878110@qq.com", "孟冰":"597878110@qq.com")
-                receivers_dict = json.loads(self.cf.get_email("receivers"))
+                receivers_dict = json.loads(self.config.get_email("receivers"))
                 name_list = []  # 收件人list
                 receivers = []  # 收件箱list
                 for key, value in receivers_dict.items():
@@ -173,12 +173,12 @@ class SendEmail(object):
                         receivers.append(value)
 
                 name_list_str = ",".join(name_list)  # 收件人姓名，将list转换为str
-                mail_host = self.cf.get_email("email_host")  # 设置邮箱服务器域名
-                mail_port = self.cf.get_email("email_port")  # 设置邮箱服务器接口
-                mail_user = self.cf.get_email("email_user")  # 发件人用户名
-                mail_pass = self.cf.get_email("email_pass")  # 发件人口令
-                subject = self.cf.get_email("subject")  # 主题
-                content = self.cf.get_email("content")  # 正文
+                mail_host = self.config.get_email("email_host")  # 设置邮箱服务器域名
+                mail_port = self.config.get_email("email_port")  # 设置邮箱服务器接口
+                mail_user = self.config.get_email("email_user")  # 发件人用户名
+                mail_pass = self.config.get_email("email_pass")  # 发件人口令
+                subject = self.config.get_email("subject")  # 主题
+                content = self.config.get_email("content")  # 正文
                 if len(name_list_str) == 0:
                     self.log.debug("所有用例都正常通过！")
                 else:

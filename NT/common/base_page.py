@@ -9,13 +9,13 @@ from NT.common.common import Common
 from NT.data.read_config import ReadConfig
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 
 
 class BasePage(object):
     """页面元素基本操作,page module"""
 
-    # web用例编号
+    # web用例编号，web_driver用于标记web用例，app_driver用于标记APP用例
     web_case_num = 0
     web_driver = None
     app_driver = None
@@ -57,9 +57,9 @@ class BasePage(object):
                             # 'chromeOptions': {'androidProcess': android_process}
                             }
             self.app_driver = appium.webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
-            global current_driver
-            current_driver = "app_driver"
-            self.switch_context()
+            global current_driver  # 用于标记是web端还是APP端的用例，以便后边方法调用
+            current_driver = "app_driver"  # 标记为APP端用例
+            self.switch_context()  # H5时需要切换context
         except Exception as e:
             self.log.error("打开app时异常 %s" % e)
             raise Exception
@@ -76,8 +76,8 @@ class BasePage(object):
             else:
                 raise Exception(self.log.error("没有找到浏览器 %s, 你可以输入'Chrome，Firefox or Ie'" % browser))
             self.web_driver = driver
-            global current_driver
-            current_driver = "web_driver"
+            global current_driver  # 用于标记是web端还是APP端的用例，以便后边方法调用
+            current_driver = "web_driver"  # 标记为web端用例
             self.web_driver.maximize_window()
         except Exception as e:
             self.log.error("打开%s浏览器时异常 %s" % (browser, e))
@@ -88,7 +88,7 @@ class BasePage(object):
         try:
             if url != "" or url != " ":
                 self.web_driver.get(url)
-                self.wait_elem(element)
+                self.wait_elem(element)  # 等待元素出现
             else:
                 raise Exception("URL地址错误！")
         except Exception as e:
@@ -116,7 +116,7 @@ class BasePage(object):
             if current_driver == "web_driver":
                 self.web_driver.quit()
             else:
-                # 混合H5编码时用
+                # H5时用
                 self.app_driver.switch_to.context("NATIVE_APP")
                 # input_name = self.app_driver.active_ime_engine
                 # self.log.debug("当前输入法：%s" % input_name)
@@ -134,8 +134,8 @@ class BasePage(object):
         """根据元素下标点击元素"""
         for i in range(1, 6, +1):  # 操作失败后重试
             try:
-                if roll:
-                    self.location(elements, tag)
+                if roll:  # 是否需要滚动页面
+                    self.location(elements, tag)  # app端页面上下微调
                 elem = self.find_elements_tag(elements, tag)
                 elem.click()
                 time.sleep(t)
@@ -151,8 +151,8 @@ class BasePage(object):
         """输入文本"""
         for i in range(1, 6, +1):  # 操作失败后重试
             try:
-                if roll:
-                    self.location(elements, tag)
+                if roll:  # 是否需要滚动页面
+                    self.location(elements, tag)  # app端页面上下微调
                 elem = self.find_elements_tag(elements, tag)
                 elem.clear()
                 elem.send_keys(text)
@@ -165,16 +165,16 @@ class BasePage(object):
             raise Exception
 
     def get_text(self, *args, text="", tag=0):
-        """获取文本内容,可多条"""
-        value = ""
+        """获取文本内容，可多条，text为获取内容的标题/属性"""
+        value = ""  # 文本内容
         for param in args:
             for i in range(1, 6, +1):  # 操作失败后重试
                 try:
                     elem = self.find_elements_tag(param, tag)
-                    value = elem.text
+                    value = elem.text  # web端获取文本内容
 
                     if value == "":
-                        # app获取文本方式
+                        # app获取文本内容
                         value = elem.get_attribute("name")
 
                     if value != "":
@@ -189,7 +189,7 @@ class BasePage(object):
         return value
 
     def switch_context(self, tag=1):
-        """切换环境，tag=0时为APP_context"""
+        """切换环境，tag=0时为android原生context"""
         try:
             contexts = self.app_driver.contexts   # 获取当前所有context
             self.log.debug("contexts:%s" % contexts)
@@ -234,7 +234,7 @@ class BasePage(object):
             raise Exception
 
     def back_to(self, *args):
-        """返回(首页)或指定元素页面(该页独有元素)"""
+        """返回(首页)或指定元素页面(须该页独有元素)"""
         try:
             home_menu = ("css_selector", "span.tab-title.ng-binding")  # 首页底部menu
             menu_elem = ()
@@ -296,23 +296,23 @@ class BasePage(object):
             line_number = sys._getframe().f_back.f_lineno
 
             path = self.common.get_result_path(case_name, "%s %s %s.png" % (current_time, func_name, line_number))
-            if current_driver == "web_driver":
+            if current_driver == "web_driver":  # web端直接截图
                 self.web_driver.get_screenshot_as_file(path)
-            else:
-                contexts = self.app_driver.contexts
-                current_context = self.app_driver.current_context
-                if current_context == contexts[0]:
+            else:  # 移动端截图
+                contexts = self.app_driver.contexts  # 获取所有的context
+                current_context = self.app_driver.current_context  # 获取当前的context
+                if current_context == contexts[0]:  # 如果是android原生环境直接截图
                     self.app_driver.get_screenshot_as_file(path)
-                else:
+                else:  # 如果是H5页面先切换到android原生环境再截图
                     self.app_driver.switch_to.context(contexts[0])
                     self.app_driver.get_screenshot_as_file(path)
-                    self.app_driver.switch_to.context(contexts[1])
+                    self.app_driver.switch_to.context(contexts[1])  # 截完图后回到原来的context
         except Exception as e:
             self.log.error("截图保存时异常 %s" % e)
             raise Exception
 
     def case_start(self, principal, api_case_name="", api_case_num=0):
-        """用例开始,参数为负责人姓名，api测试名，api测试编号"""
+        """用例开始，参数为负责人姓名，api测试名，api测试编号"""
         try:
             # 获取调用函数名作为截图文件夹名
             global case_name
@@ -330,7 +330,7 @@ class BasePage(object):
 
     def case_end(self):
         """用例结束"""
-        # "*"号不可改，用于提取错误日志
+        # "*"号不可改，用于提取用例失败的日志
         self.log.debug("*" * 100 + "\n")
 
     def case_pass(self):
@@ -339,16 +339,16 @@ class BasePage(object):
 
     def case_failed(self):
         """用例失败"""
-        # "failed!"不可修改，用于标记错误日志
+        # "failed!"不可改，用于标记用例失败的日志
         self.log.debug("=" * 10 + "%s: failed!" % case_name + "=" * 10)
 
     def find_elements_tag(self, elements, tag=0):
         """查找元素(一个具体的元素点击和输入时定位)"""
         try:
-            key = elements[0]
-            value = elements[1]
+            key = elements[0]  # 定位方式
+            value = elements[1]  # 值
 
-            if current_driver == "web_driver":
+            if current_driver == "web_driver":  # web定位
                 if key == "css_selector":
                     elem = self.web_driver.find_elements_by_css_selector(value)[tag]
                 elif key == "xpath":
@@ -369,7 +369,7 @@ class BasePage(object):
                     self.log.error("定位类型书写错误：%s" % str(elements))
                     raise Exception
                 return elem
-            else:
+            else:  # app定位
                 if key == "css_selector":
                     elem = self.app_driver.find_elements_by_css_selector(value)[tag]
                 elif key == "xpath":
@@ -402,7 +402,7 @@ class BasePage(object):
             key = elements[0]
             value = elements[1]
 
-            if current_driver == "web_driver":
+            if current_driver == "web_driver":  # web查找元素
                 if key == "css_selector":
                     elem = self.web_driver.find_elements_by_css_selector(value)
                 elif key == "xpath":
@@ -423,7 +423,7 @@ class BasePage(object):
                     self.log.error("函数类型书写错误：%s" % str(elements))
                     raise Exception
                 return elem
-            else:
+            else:  # APP查找元素
                 if key == "css_selector":
                     elem = self.app_driver.find_elements_by_css_selector(value)
                 elif key == "xpath":
@@ -475,10 +475,10 @@ class BasePage(object):
                 locator = (By.TAG_NAME, value)
 
             if current_driver == "web_driver":
-                WebDriverWait(self.web_driver, 20, 0.5).until(EC.presence_of_element_located(locator),
+                WebDriverWait(self.web_driver, 20, 0.5).until(ec.presence_of_element_located(locator),
                                                               "%s元素未出现！" % str(element))
             else:
-                WebDriverWait(self.app_driver, 20, 0.5).until(EC.presence_of_element_located(locator),
+                WebDriverWait(self.app_driver, 20, 0.5).until(ec.presence_of_element_located(locator),
                                                               "%s元素未出现！" % str(element))
         except Exception as e:
             self.log.debug("等待元素出现时异常 %s" % e)

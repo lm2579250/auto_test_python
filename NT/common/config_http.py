@@ -3,7 +3,7 @@ import json
 import threading
 import requests
 from NT.common.log import MyLog
-from NT.data import read_config
+from NT.data.read_config import ReadConfig
 
 
 class ConfigHTTP:
@@ -21,16 +21,16 @@ class ConfigHTTP:
     def __init__(self):
         global host, timeout, headers
         self.log = MyLog.get_log().logger
-        self.cf = read_config.ReadConfig()
+        self.config = ReadConfig()
         self.session = requests.Session()
 
         # 从配置文件中读取信息
         # 获取域名
-        host = self.cf.get_http("url")
+        host = self.config.get_http("url")
         # 获取超时时长
-        timeout = self.cf.get_http("timeout")
+        timeout = self.config.get_http("timeout")
         # 获取headers，并将str转换为dict
-        headers = json.loads(self.cf.get_headers("headers"))
+        headers = json.loads(self.config.get_headers("headers"))
 
     def send_request(self, case_params):
         """发送请求"""
@@ -88,7 +88,7 @@ class ConfigHTTP:
             if "token" in req:
                 token = req["token"]
                 headers["token"] = token
-                self.cf.set_web_headers(json.dumps(headers))  # 将dict转换为str
+                self.config.set_web_headers(json.dumps(headers))  # 将dict转换为str
         except Exception as e:
             self.log.error("更新token时异常：%s" % e)
             raise Exception
