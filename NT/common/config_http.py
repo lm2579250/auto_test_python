@@ -32,7 +32,7 @@ class ConfigHTTP:
         # 获取headers，并将str转换为dict
         headers = json.loads(self.cf.get_headers("headers"))
 
-    def send_url(self, case_params):
+    def send_request(self, case_params):
         """发送请求"""
         method, url, params, files = "", "", "", {}
         try:

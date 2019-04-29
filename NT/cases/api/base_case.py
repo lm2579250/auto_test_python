@@ -34,7 +34,7 @@ class TestCase(unittest.TestCase):
                     code = int(param_value)
 
             # 发起请求
-            response = self.config.send_url(case_params)
+            response = self.config.send_request(case_params)
 
             self.log.debug("是否请求成功：%s" % response.ok)  # 查看response.ok的布尔值判断是否请求成功
             self.log.debug("返回状态码：%s" % response.status_code)  # 失败请求(非200响应)抛出异常
