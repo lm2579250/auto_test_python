@@ -65,4 +65,3 @@ if __name__ == "__main__":
     run.my_log.extraction_error_log()
     # 发送email
     run.send_email.with_zip()
-
