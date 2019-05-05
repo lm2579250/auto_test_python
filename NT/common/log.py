@@ -22,7 +22,7 @@ class Log(object):
         self.common = Common()
         try:
             # 生成日志文件
-            log_path = self.common.get_result_path("log.log")
+            log_path = self.common.get_result_path("result.log")
 
             # 定义logger
             self.logger = logging.getLogger()
@@ -77,9 +77,9 @@ class MyLog:
         """按负责人提取错误日志"""
         try:
             # 生成原始日志文件路径
-            log_path = self.common.get_result_path("log.log")
+            log_path = self.common.get_result_path("result.log")
             # 生成错误日志文件路径
-            error_log_path = self.common.get_result_path("error_log.log")
+            error_log_path = self.common.get_result_path("error.log")
 
             # 从邮件的收件人信息中读取所有的负责人姓名，实现错误日志按人分类
             config = ReadConfig()
