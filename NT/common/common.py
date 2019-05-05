@@ -6,8 +6,8 @@ from datetime import datetime
 
 class Common(object):
     """公用函数"""
-    # 用例开始执行时间作文件夹名
-    start_time = str(datetime.now().strftime("%Y%m%d%H%M%S"))
+    time_format = "%Y%m%d%H%M%S"  # 时间格式
+    start_time = str(datetime.now().strftime(time_format))  # 用例开始执行时间作文件夹名
     _instance_lock = threading.Lock()  # 设置单例锁
 
     def __new__(cls, *args, **kwargs):
@@ -17,6 +17,14 @@ class Common(object):
                 if not hasattr(cls, "_instance"):
                     cls._instance = object.__new__(cls)
         return cls._instance
+
+    def get_now_time(self):
+        """获取当前时间"""
+        return datetime.now().strftime(self.time_format)
+
+    def interval(self, start_time, end_time):
+        """计算时间差"""
+        return datetime.strptime(end_time, self.time_format) - datetime.strptime(start_time, self.time_format)
 
     @staticmethod
     def get_path(*args):

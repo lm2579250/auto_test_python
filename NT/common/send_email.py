@@ -48,7 +48,6 @@ class SendEmail(object):
             try:
                 # 提取错误用例负责人姓名
                 file_list = os.listdir(self.log_dir)  # 获取时间目录下的文件列表
-                self.log.debug(file_list)
                 for file in file_list:
                     file_name = os.path.splitext(file)[0]  # 文件名
                     # 用正则表达式查找文件名为汉字的文件(负责人对应的错误日志文件)，正则表达式为：非汉字的字符用""替换掉

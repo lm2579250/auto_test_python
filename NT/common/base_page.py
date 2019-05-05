@@ -3,7 +3,6 @@ import time
 import threading
 import appium.webdriver
 import selenium.webdriver
-from datetime import datetime
 from NT.common.log import MyLog
 from NT.common.common import Common
 from NT.data.read_config import ReadConfig
@@ -57,6 +56,7 @@ class BasePage(object):
                             }
             self.app_driver = appium.webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)  # 操作APP端元素的webdriver实例
             self.current_driver = "app_driver"  # 标记为APP端用例
+            time.sleep(10)
             self.switch_context()  # H5时需要切换context
         except Exception as e:
             self.log.error("打开app时异常 %s" % e)
@@ -251,9 +251,6 @@ class BasePage(object):
                         break
                 self.log.debug("返回：%s" % i)
                 i += 1
-            else:
-                self.log.debug("app返回异常，重新打开app")
-                self.open_app()
         except Exception as e:
             self.log.error("返回时异常 %s" % e)
             raise Exception
@@ -286,7 +283,7 @@ class BasePage(object):
         """截图"""
         try:
             # 获取当前时间
-            current_time = str(datetime.now().strftime("%H%M%S"))
+            current_time = str(self.common.get_now_time())
             # 获取调用函数名
             func_name = sys._getframe().f_back.f_code.co_name
             # 获取调用行号
