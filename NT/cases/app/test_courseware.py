@@ -117,8 +117,8 @@ class AppCourseware(unittest.TestCase):
             else:
                 self.log.debug("暂无内容！")
         except Exception as e:
-                self.log.error(e)
-                raise Exception
+            self.log.error(e)
+            raise Exception
 
     def tearDown(self):
         self.base_page.case_end()

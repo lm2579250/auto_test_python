@@ -20,6 +20,7 @@ class AppTechnicalOperation(unittest.TestCase):
         bottom_menu = ("css_selector", "span.tab-title.ng-binding")  # 底部menu
         operation_tool_menu = ("css_selector", "i.iconfont.nw-tool.mine-icon")  # 操作工具
         operation_exam_menu = ("css_selector", "a.item.item-icon-right")  # 技术操作考核
+        prompt_nothing = ("css_selector", "div.nw-nothing-text")  # “暂无内容”提示
         operation_list = ("css_selector", "ion-item.item-remove-animate.item-text-wrap.item")  # 试卷list
         operation_name = ("css_selector", "h1.operate-title.text-center.font-large.ng-binding")  # 试卷名称
         scan_button = ("css_selector", "button.button.button-block.button-calm")  # 扫码考核按钮
@@ -44,7 +45,10 @@ class AppTechnicalOperation(unittest.TestCase):
                 self.log.debug("进入[操作工具]")
                 self.base_page.click_elem_tag(operation_tool_menu)
                 self.base_page.screen_shot()
-                self.assertIs(self.base_page.displayed(operation_exam_menu), True, "进入[操作工具]异常！")
+                if self.base_page.displayed(prompt_nothing):
+                    self.log.debug("暂无内容！")
+                    self.base_page.case_pass()
+                    return
             else:
                 self.log.debug("没有[操作工具]选项，结束测试！")
                 self.base_page.case_pass()
