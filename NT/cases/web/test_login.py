@@ -2,14 +2,14 @@ import unittest
 from NT.common.log import MyLog
 from NT.common.common import Common
 from NT.common.base_page import BasePage
-from NT.data.config_param import ConfigParam
+from NT.data.read_config import ReadConfig
 
 
 class WebLogin(unittest.TestCase):
     """登录"""
     def setUp(self):
         try:
-            config = ConfigParam()
+            config = ReadConfig()
             self.base_page = BasePage()
             self.common = Common()
             self.log = MyLog().get_log().logger

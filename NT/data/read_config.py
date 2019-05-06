@@ -5,7 +5,7 @@ import configparser
 from NT.common.common import Common
 
 
-class ConfigParam(object):
+class ReadConfig(object):
     """读取config配置文件中的内容"""
 
     _instance_lock = threading.Lock()  # 设置单例锁

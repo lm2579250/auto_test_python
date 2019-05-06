@@ -1,14 +1,14 @@
 import unittest
 from NT.common.log import MyLog
 from NT.common.base_page import BasePage
-from NT.common.config_url import ConfigURL
+from NT.common.send_request import SendRequest
 
 
 class TestCase(unittest.TestCase):
     """api请求类"""
 
     def setUp(self):
-        self.URL = ConfigURL()
+        self.request = SendRequest()
         self.base_page = BasePage()
         self.log = MyLog.get_log().logger
 
@@ -30,7 +30,7 @@ class TestCase(unittest.TestCase):
                     code = int(param_value)
 
             # 发起请求
-            response = self.URL.send_request(case_params)
+            response = self.request.send_request(case_params)
 
             self.log.debug("是否请求成功：%s" % response.ok)  # 查看response.ok的布尔值判断是否请求成功
             self.log.debug("返回状态码：%s" % response.status_code)  # 失败请求(非200响应)抛出异常
