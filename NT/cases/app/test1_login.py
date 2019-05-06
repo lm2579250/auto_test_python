@@ -1,7 +1,7 @@
 import unittest
 from NT.common.log import MyLog
 from NT.common.base_page import BasePage
-from NT.data.read_config import ReadConfig
+from NT.data.config_param import ConfigParam
 
 
 class AppLogin(unittest.TestCase):
@@ -9,7 +9,7 @@ class AppLogin(unittest.TestCase):
 
     def setUp(self):
         try:
-            config = ReadConfig()
+            config = ConfigParam()
             self.base_page = BasePage()
             self.log = MyLog().get_log().logger
             self.user_name = config.get_app_param("user_name")

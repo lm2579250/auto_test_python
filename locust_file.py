@@ -1,4 +1,4 @@
-from NT.data.read_config import ReadConfig
+from NT.data.config_param import ConfigParam
 from locust import HttpLocust, TaskSet, task
 
 
@@ -13,7 +13,7 @@ class UserBehavior(TaskSet):
 
 
 class User(HttpLocust):
-    cf = ReadConfig()
+    cf = ConfigParam()
     host = r"https://admin.hushijie.com.cn"
 
     task_set = UserBehavior

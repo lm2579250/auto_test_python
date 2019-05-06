@@ -1,7 +1,7 @@
 import pymysql.cursors
 from profilehooks import profile
 from NT.common.log import MyLog
-from NT.data.read_config import ReadConfig
+from NT.data.config_param import ConfigParam
 
 
 class DB:
@@ -13,12 +13,12 @@ class DB:
             self.log = MyLog.get_log().logger
 
             # 读取config.ini文件中的数据库配置信息
-            read_config = ReadConfig()
-            host = read_config.get_db("host")
-            port = read_config.get_db("port")
-            user = read_config.get_db("user")
-            password = read_config.get_db("password")
-            db = read_config.get_db("db")
+            config = ConfigParam()
+            host = config.get_db("host")
+            port = config.get_db("port")
+            user = config.get_db("user")
+            password = config.get_db("password")
+            db = config.get_db("db")
 
             print(host, port, user, password, db)
 

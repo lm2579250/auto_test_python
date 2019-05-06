@@ -5,7 +5,7 @@ import appium.webdriver
 import selenium.webdriver
 from NT.common.log import MyLog
 from NT.common.common import Common
-from NT.data.read_config import ReadConfig
+from NT.data.config_param import ConfigParam
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -28,7 +28,7 @@ class BasePage(object):
         return cls._instance
 
     def __init__(self):
-        self.config = ReadConfig()
+        self.config = ConfigParam()
         self.log = MyLog().get_log().logger
         self.common = Common()
 

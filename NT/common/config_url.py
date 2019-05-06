@@ -3,11 +3,11 @@ import json
 import threading
 import requests
 from NT.common.log import MyLog
-from NT.data.read_config import ReadConfig
+from NT.data.config_param import ConfigParam
 
 
-class ConfigHTTP:
-    """配置http参数并请求"""
+class ConfigURL:
+    """配置URL参数并请求"""
     _instance_lock = threading.Lock()  # 设置单例锁
 
     def __new__(cls, *args, **kwargs):
@@ -21,7 +21,7 @@ class ConfigHTTP:
     def __init__(self):
         global host, timeout, headers
         self.log = MyLog.get_log().logger
-        self.config = ReadConfig()
+        self.config = ConfigParam()
         self.session = requests.Session()
 
         # 从配置文件中读取信息

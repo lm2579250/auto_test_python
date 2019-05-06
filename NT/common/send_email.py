@@ -9,7 +9,7 @@ import email.mime.text
 import email.mime.multipart
 from email.header import Header
 from email.mime.application import MIMEApplication
-from NT.data.read_config import ReadConfig
+from NT.data.config_param import ConfigParam
 from NT.common.common import Common
 from NT.common.log import MyLog
 
@@ -30,7 +30,7 @@ class SendEmail(object):
         try:
             self.common = Common()  # 实例化一个common调用公用函数
             self.log = MyLog().get_log().logger  # 实例化一个log打印日志
-            self.config = ReadConfig()  # 实例化一个read_config读取email的配置信息
+            self.config = ConfigParam()  # 实例化一个read_config读取email的配置信息
             self.msg = email.mime.multipart.MIMEMultipart('alternative')  # 实例化一个email发送email
             self.log_dir = self.common.get_result_path()  # 获取存储日志的时间目录
             self.principal_name_list = []  # 错误用例负责人list
