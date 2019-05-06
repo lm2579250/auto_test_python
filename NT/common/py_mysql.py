@@ -1,7 +1,7 @@
 import pymysql.cursors
 from profilehooks import profile
 from NT.common.log import MyLog
-from NT.data.read_config import ReadConfig
+from NT.common.read_config import ReadConfig
 
 
 class DB:

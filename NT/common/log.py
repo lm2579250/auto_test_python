@@ -2,7 +2,7 @@ import os
 import json
 import logging
 import threading
-from NT.data.read_config import ReadConfig
+from NT.common.read_config import ReadConfig
 from NT.common.common import Common
 
 

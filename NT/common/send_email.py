@@ -9,7 +9,7 @@ import email.mime.text
 import email.mime.multipart
 from email.header import Header
 from email.mime.application import MIMEApplication
-from NT.data.read_config import ReadConfig
+from NT.common.read_config import ReadConfig
 from NT.common.common import Common
 from NT.common.log import MyLog
 

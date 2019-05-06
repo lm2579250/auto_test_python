@@ -1,5 +1,5 @@
-from NT.data.read_config import ReadConfig
-from locust import HttpLocust, TaskSet, task
+from NT.common.read_config import ReadConfig
+from locust import HttpLocust, TaskSet
 
 
 class UserBehavior(TaskSet):

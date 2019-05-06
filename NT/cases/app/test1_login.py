@@ -1,7 +1,7 @@
 import unittest
 from NT.common.log import MyLog
 from NT.common.base_page import BasePage
-from NT.data.read_config import ReadConfig
+from NT.common.read_config import ReadConfig
 
 
 class AppLogin(unittest.TestCase):

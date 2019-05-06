@@ -5,7 +5,7 @@ import appium.webdriver
 import selenium.webdriver
 from NT.common.log import MyLog
 from NT.common.common import Common
-from NT.data.read_config import ReadConfig
+from NT.common.read_config import ReadConfig
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec

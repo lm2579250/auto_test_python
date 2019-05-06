@@ -3,7 +3,7 @@ import json
 import threading
 import requests
 from NT.common.log import MyLog
-from NT.data.read_config import ReadConfig
+from NT.common.read_config import ReadConfig
 
 
 class SendRequest:
