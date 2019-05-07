@@ -54,6 +54,10 @@ class AppTechnicalOperation(unittest.TestCase):
                 self.base_page.case_pass()
                 return
             self.log.debug("进入[技术操作列表]")
+            if self.base_page.displayed(prompt_nothing):
+                self.log.debug("暂无内容！")
+                self.base_page.case_pass()
+                return
             self.base_page.click_elem_tag(operation_exam_menu)
             self.base_page.screen_shot()
             self.assertIs(self.base_page.displayed(operation_list), True, "进入[技术操作列表]异常！")
