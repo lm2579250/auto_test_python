@@ -18,7 +18,7 @@ class AlterCase:
     def __init__(self):
         self.log = MyLog.get_log().logger
         self.common = Common()
-        self.cases_path, self.cases_dict = self.common.get_api_cases()
+        self.api_cases_path, self.api_cases_dict = self.common.get_api_cases()
 
     def produce_case(self):
         """生成所有api用例"""
@@ -45,7 +45,7 @@ class AlterCase:
                     # 需要改变的部分
                     n = 1  # 用例编号
                     global case_name
-                    for case_name, case_params in self.cases_dict.items():
+                    for case_name, case_params in self.api_cases_dict.items():
                         j = 0
                         for line in lines:
                             if j > i:

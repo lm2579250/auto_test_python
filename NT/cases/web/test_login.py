@@ -21,6 +21,7 @@ class WebLogin(unittest.TestCase):
             self.log.error(e)
             raise Exception
 
+    @unittest.skip("暂不执行")
     def test_web_login(self):
         """web登录"""
         try:

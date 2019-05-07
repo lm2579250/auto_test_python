@@ -1,5 +1,6 @@
 import unittest
 from NT.common.log import MyLog
+from NT.common.common import Common
 from NT.common.base_page import BasePage
 from NT.common.send_request import SendRequest
 
@@ -15,6 +16,9 @@ class TestCase(unittest.TestCase):
     def execute_case(self, case_params, case_num, case_name):
         """api请求实现"""
         try:
+            self.log.debug("api用例路径：%s" % Common.api_cases_path)
+            self.log.debug("api用例数量：%s" % len(Common.api_cases_dict))
+            self.log.debug(Common.api_cases_dict)
             # 从用例中提取负责人姓名
             principal = case_params["principal"]
             # 用例开始头部信息
