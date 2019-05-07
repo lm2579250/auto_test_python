@@ -19,18 +19,22 @@ class SendRequest:
         return cls._instance
 
     def __init__(self):
-        global host, timeout, headers
-        self.log = MyLog.get_log().logger
-        self.config = ReadConfig()
-        self.session = requests.Session()
+        try:
+            global host, timeout, headers
+            self.log = MyLog.get_log().logger
+            self.config = ReadConfig()
+            self.session = requests.Session()
 
-        # 从配置文件中读取信息
-        # 获取域名
-        host = self.config.get_http("url")
-        # 获取超时时长
-        timeout = self.config.get_http("timeout")
-        # 获取headers，并将str转换为dict
-        headers = json.loads(self.config.get_headers("headers"))
+            # 从配置文件中读取信息
+            # 获取域名
+            host = self.config.get_http("url")
+            # 获取超时时长
+            timeout = self.config.get_http("timeout")
+            # 获取headers，并将str转换为dict
+            headers = json.loads(self.config.get_headers("headers"))
+        except Exception as e:
+            self.log.error(e)
+            raise Exception("出现异常！")
 
     def send_request(self, case_params):
         """发送请求"""
@@ -38,16 +42,22 @@ class SendRequest:
         try:
             # 解析case_params中的参数
             for param_key, param_value in case_params.items():
-                if param_key == "method":
-                    method = param_value
-                if param_key == "url":
-                    url = host + param_value
-                if param_key == "params":
-                    if param_value is not None and param_value != "None":
-                        if os.path.exists(param_value):  # 判断是否是一个文件路径且存在
-                            files = {'file': open(param_value, 'rb')}  # 上传文件必须open
+                if isinstance(param_value, str):
+                    if param_key == "method":
+                        method = param_value
+                    elif param_key == "url":
+                        url = host + param_value
+                    elif param_key == "params":
+                        if ":" in param_value and "/" in param_value or "\\" in param_value:
+                            if os.path.exists(param_value):  # 判断是否是一个文件路径且存在
+                                files = {'file': open(param_value, 'rb')}  # 上传文件必须open
+                            else:
+                                raise Exception("需要上传文件的路径错误：%s" % param_value)
                         else:
                             params = json.loads(param_value)  # 将str转换为dict
+                        break
+                else:
+                    raise Exception("api用例中%s类型错误！" % param_key)
 
             self.log.debug("预设超时时长：%s s" % timeout)
             response = None
@@ -62,23 +72,23 @@ class SendRequest:
                 self.update_token(response)
             return response
         except requests.exceptions.ConnectionError as e:
-            self.log.error("遇到网络问题！（如：DNS 查询失败、拒绝连接等）：%s" % e)
-            raise Exception
+            self.log.error(e)
+            raise Exception("遇到网络问题！(如：DNS 查询失败、拒绝连接等)！")
         except requests.exceptions.HTTPError as e:
-            self.log.error("HTTP 请求返回了不成功的状态码：%s" % e)
-            raise Exception
+            self.log.error(e)
+            raise Exception("HTTP 请求返回了不成功的状态码！")
         except requests.exceptions.TooManyRedirects as e:
-            self.log.error("请求超过了设定的最大重定向次数：%s" % e)
-            raise Exception
+            self.log.error(e)
+            raise Exception("请求超过了设定的最大重定向次数！")
         except requests.exceptions.Timeout as e:
-            self.log.error("请求超时：%s" % e)
-            raise Exception
+            self.log.error(e)
+            raise Exception("请求超时！")
         except requests.exceptions.RequestException as e:
-            self.log.error("请求异常：%s" % e)
-            raise Exception
+            self.log.error(e)
+            raise Exception("请求异常！")
         except Exception as e:
-            self.log.error("请求异常：%s" % e)
-            raise Exception
+            self.log.error(e)
+            raise Exception("请求异常！")
 
     def update_token(self, response):
         """更新token"""
@@ -90,5 +100,5 @@ class SendRequest:
                 headers["token"] = token
                 self.config.set_web_headers(json.dumps(headers))  # 将dict转换为str
         except Exception as e:
-            self.log.error("更新token时异常：%s" % e)
-            raise Exception
+            self.log.error(e)
+            raise Exception("更新token时异常！")

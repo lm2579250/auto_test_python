@@ -19,7 +19,7 @@ class WebLogin(unittest.TestCase):
             self.password = config.get_web_param("password")
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     @unittest.skip("暂不执行")
     def test_web_login(self):
@@ -59,15 +59,15 @@ class WebLogin(unittest.TestCase):
             self.log.error(e)
             # 用例失败，必须
             self.base_page.case_failed()
-            raise Exception
+            raise Exception("出现异常！")
 
     def tearDown(self):
         try:
             self.log.debug("关闭网页！")
             self.base_page.quit()
         except Exception as e:
-            self.log.error("关闭页面时异常！\n%s\n" % e)
-            raise Exception
+            self.log.error(e)
+            raise Exception("关闭页面时异常！\n")
         finally:
             # 用例结束，必须
             self.base_page.case_end()

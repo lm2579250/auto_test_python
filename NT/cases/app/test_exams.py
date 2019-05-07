@@ -7,6 +7,7 @@ from NT.common.base_page import BasePage
 
 class AppExams(unittest.TestCase):
     """考试"""
+
     def setUp(self):
         try:
             self.common = Common()
@@ -14,7 +15,7 @@ class AppExams(unittest.TestCase):
             self.log = MyLog().get_log().logger
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def test_app_exams(self):
         """app考试"""
@@ -36,7 +37,7 @@ class AppExams(unittest.TestCase):
             self.log.error(e)
             # 用例失败，必须
             self.base_page.case_failed()
-            raise Exception
+            raise Exception("出现异常！")
         finally:
             self.base_page.back_to()
 
@@ -141,10 +142,10 @@ class AppExams(unittest.TestCase):
                     self.log.debug("提交成功！")
                 else:
                     self.log.error(e)
-                    raise Exception
+                    raise Exception("出现异常！")
         except Exception as e:
-                self.log.error(e)
-                raise Exception
+            self.log.error(e)
+            raise Exception("出现异常！")
 
     def enter(self):
         """进入试卷"""
@@ -178,7 +179,7 @@ class AppExams(unittest.TestCase):
                     return AppExams.find_the_paper(self)
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def find_the_paper(self):
         """已交卷中查找可以重新答题的试卷"""
@@ -222,7 +223,7 @@ class AppExams(unittest.TestCase):
                 return False
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def tearDown(self):
         # 用例结束，必须

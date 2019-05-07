@@ -74,7 +74,7 @@ class Common(object):
             # 循环遍历所有sheet
             for i in range(len(sheets)):
                 sheet = wb[sheets[i]]
-                print("正在读取的sheet名:%s" % sheet.title)
+                print("正在读取：%s" % sheet.title)
 
                 if len(case_param_key) == 0:  # 判断是否已经添加case_param_key
                     for r in range(1, 2):  # 遍历第一行，获取case_param_key
@@ -86,7 +86,10 @@ class Common(object):
                     if sheet.cell(row=r, column=1).value is not None:
                         # 从第二行开始的第一列为用例名，用list case_key保存
                         key = sheet.cell(row=r, column=1).value  # 获取用例名
-                        case_key.append(key)
+                        if key not in self.api_cases_dict:
+                            case_key.append(key)
+                        else:
+                            raise Exception("api用例名%s重复" % key)
                         # 从第二行的第二列开始为用例数据，用字符串 case_param_value保存
                         for c in range(2, sheet.max_column + 1):
                             case_param_value = sheet.cell(row=r, column=c).value  # 获取用例值
@@ -95,6 +98,8 @@ class Common(object):
                         # 将第一列的用例名case_key和用例数据字典case_value组成用例字典case_dict
                         self.api_cases_dict[case_key[r - 2]] = case_value
                         case_value = {}  # 一个用例遍历完后用例值dict case_value置空
+                    else:
+                        break
                 case_key = []  # 一个sheet遍历完后用例名list case_key置空
             return self.api_cases_path, self.api_cases_dict
         except Exception as e:

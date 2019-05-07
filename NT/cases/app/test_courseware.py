@@ -12,7 +12,7 @@ class AppCourseware(unittest.TestCase):
             self.log = MyLog().get_log().logger
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def test_app_courseware(self):
         """app课件"""
@@ -61,7 +61,7 @@ class AppCourseware(unittest.TestCase):
             self.log.error(e)
             # 用例失败，必须
             self.base_page.case_failed()
-            raise Exception
+            raise Exception("出现异常！")
         finally:
             self.base_page.back_to()
 
@@ -86,7 +86,7 @@ class AppCourseware(unittest.TestCase):
                 return False
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def study(self, tag=0):
         """学习课件"""
@@ -118,7 +118,7 @@ class AppCourseware(unittest.TestCase):
                 self.log.debug("暂无内容！")
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def tearDown(self):
         self.base_page.case_end()

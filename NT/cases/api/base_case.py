@@ -8,9 +8,13 @@ class TestCase(unittest.TestCase):
     """api请求类"""
 
     def setUp(self):
-        self.request = SendRequest()
-        self.base_page = BasePage()
-        self.log = MyLog.get_log().logger
+        try:
+            self.request = SendRequest()
+            self.base_page = BasePage()
+            self.log = MyLog.get_log().logger
+        except Exception as e:
+            self.log.debug(e)
+            raise Exception("出现异常！")
 
     def execute_case(self, case_params, case_num, case_name):
         """api请求实现"""
@@ -25,9 +29,15 @@ class TestCase(unittest.TestCase):
             self.log.info("用例参数：%s" % case_params)
             for param_key, param_value in case_params.items():
                 if param_key == "msg":
-                    msg = param_value
-                if param_key == "code":
-                    code = int(param_value)
+                    if isinstance(param_value, str):
+                        msg = param_value
+                    else:
+                        raise Exception("api用例中msg类型错误！")
+                elif param_key == "code":
+                    if isinstance(param_value, int):
+                        code = int(param_value)
+                    else:
+                        raise Exception("api用例中code类型错误！")
 
             # 发起请求
             response = self.request.send_request(case_params)
@@ -56,9 +66,9 @@ class TestCase(unittest.TestCase):
             response.raise_for_status()  # 状态码不是200时抛出异常
             self.base_page.case_pass()
         except Exception as e:
-            self.log.error("%s" % e)
+            self.log.error(e)
             self.base_page.case_failed()
-            raise Exception
+            raise Exception("出现异常！")
         finally:
             self.base_page.case_end()
 

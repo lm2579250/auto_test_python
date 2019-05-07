@@ -16,7 +16,7 @@ class AppLogin(unittest.TestCase):
             self.password = config.get_app_param("password")
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def test_app_login(self):
         """app登录"""
@@ -90,7 +90,7 @@ class AppLogin(unittest.TestCase):
             self.log.error(e)
             # 用例失败，必须
             self.base_page.case_failed()
-            raise Exception
+            raise Exception("出现异常！")
 
     def tearDown(self):
         self.base_page.case_end()

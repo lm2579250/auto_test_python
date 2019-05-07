@@ -38,7 +38,8 @@ class SendEmail(object):
             self.result = False  # 发送结果标志
             self.num = 0  # 发送失败后重试次数
         except Exception as e:
-            self.log.error("SendEmail.__init__异常 %s" % e)
+            self.log.error(e)
+            raise Exception("SendEmail.__init__异常！")
 
     def with_zip(self):
         """附件以zip格式发送邮件"""
@@ -110,53 +111,57 @@ class SendEmail(object):
 
     def send(self):
         """发送邮件"""
-        # 从配置文件中读取发件人信息
-        sender_name = ""  # 发件人
-        sender_email = ""  # 发件箱
-        sender_dict = json.loads(self.config.get_email("sender"))
-        for key, value in sender_dict.items():
-            sender_name = key  # 发件人
-            sender_email = value  # 发件箱
+        try:
+            # 从配置文件中读取发件人信息
+            sender_name = ""  # 发件人
+            sender_email = ""  # 发件箱
+            sender_dict = json.loads(self.config.get_email("sender"))
+            for key, value in sender_dict.items():
+                sender_name = key  # 发件人
+                sender_email = value  # 发件箱
 
-        # 从配置文件中读取收件人信息
-        # receivers内容为字典时使用(receivers = {"蓝梦":"597878110@qq.com", "孟冰":"597878110@qq.com")
-        receivers_dict = json.loads(self.config.get_email("receivers"))
-        name_list = []  # 收件人list
-        receivers = []  # 收件箱list
-        for key, value in receivers_dict.items():
-            if key in self.principal_name_list:
-                name_list.append(key)
-                receivers.append(value)
+            # 从配置文件中读取收件人信息
+            # receivers内容为字典时使用(receivers = {"蓝梦":"597878110@qq.com", "孟冰":"597878110@qq.com")
+            receivers_dict = json.loads(self.config.get_email("receivers"))
+            name_list = []  # 收件人list
+            receivers = []  # 收件箱list
+            for key, value in receivers_dict.items():
+                if key in self.principal_name_list:
+                    name_list.append(key)
+                    receivers.append(value)
 
-        # 邮件信息
-        name_list_str = ",".join(name_list)  # 收件人姓名，将list转换为str
-        mail_host = self.config.get_email("email_host")  # 设置邮箱服务器域名
-        mail_port = self.config.get_email("email_port")  # 设置邮箱服务器接口
-        mail_user = self.config.get_email("email_user")  # 发件人用户名
-        mail_pass = self.config.get_email("email_pass")  # 发件人口令
-        subject = self.config.get_email("subject")  # 主题
-        content = self.config.get_email("content")  # 正文
-        if len(name_list_str) == 0:
-            self.log.debug("所有用例都正常通过！")
-        else:
-            self.log.debug("发件人：%s" % sender_name)
-            self.log.debug("收件人：%s" % name_list_str)
+            # 邮件信息
+            name_list_str = ",".join(name_list)  # 收件人姓名，将list转换为str
+            mail_host = self.config.get_email("email_host")  # 设置邮箱服务器域名
+            mail_port = self.config.get_email("email_port")  # 设置邮箱服务器接口
+            mail_user = self.config.get_email("email_user")  # 发件人用户名
+            mail_pass = self.config.get_email("email_pass")  # 发件人口令
+            subject = self.config.get_email("subject")  # 主题
+            content = self.config.get_email("content")  # 正文
+            if len(name_list_str) == 0:
+                self.log.debug("所有用例都正常通过！")
+            else:
+                self.log.debug("发件人：%s" % sender_name)
+                self.log.debug("收件人：%s" % name_list_str)
 
-            txt = email.mime.text.MIMEText(content, 'plain', 'utf-8')
-            self.msg.attach(txt)
-            self.msg['Subject'] = Header(subject, 'utf-8')
-            self.msg['From'] = Header(sender_name, 'utf-8')
-            self.msg['To'] = Header("%s" % name_list_str, 'utf-8')
+                txt = email.mime.text.MIMEText(content, 'plain', 'utf-8')
+                self.msg.attach(txt)
+                self.msg['Subject'] = Header(subject, 'utf-8')
+                self.msg['From'] = Header(sender_name, 'utf-8')
+                self.msg['To'] = Header("%s" % name_list_str, 'utf-8')
 
-            # 调用邮箱服务器
-            smt_obj = smtplib.SMTP_SSL(mail_host, mail_port)
-            # 登录邮箱
-            smt_obj.login(mail_user, mail_pass)
-            # 发送邮件
-            smt_obj.sendmail(sender_email, receivers, self.msg.as_string())
-            # 关闭邮箱
-            smt_obj.quit()
-            self.log.debug("发送成功！")
+                # 调用邮箱服务器
+                smt_obj = smtplib.SMTP_SSL(mail_host, mail_port)
+                # 登录邮箱
+                smt_obj.login(mail_user, mail_pass)
+                # 发送邮件
+                smt_obj.sendmail(sender_email, receivers, self.msg.as_string())
+                # 关闭邮箱
+                smt_obj.quit()
+                self.log.debug("发送成功！")
+        except Exception as e:
+            self.log.error(e)
+            raise Exception("发送email时异常！")
 
     def remove_result(self):
         """发送报告后删除其他的文件夹"""
@@ -170,5 +175,5 @@ class SendEmail(object):
                     shutil.rmtree(path)
                     i -= 1
         except Exception as e:
-            self.log.error("删除result下文件夹时异常：%s" % e)
-            raise Exception
+            self.log.error(e)
+            raise Exception("删除result下文件夹时异常！")

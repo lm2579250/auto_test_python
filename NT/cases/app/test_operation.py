@@ -5,7 +5,7 @@ from NT.common.log import MyLog
 from NT.common.base_page import BasePage
 
 
-class AppTechnicalOperation(unittest.TestCase):
+class AppOperation(unittest.TestCase):
     """技术操作"""
     def setUp(self):
         try:
@@ -13,7 +13,7 @@ class AppTechnicalOperation(unittest.TestCase):
             self.log = MyLog().get_log().logger
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def test_app_operation(self):
         """app技术操作"""
@@ -54,10 +54,6 @@ class AppTechnicalOperation(unittest.TestCase):
                 self.base_page.case_pass()
                 return
             self.log.debug("进入[技术操作列表]")
-            if self.base_page.displayed(prompt_nothing):
-                self.log.debug("暂无内容！")
-                self.base_page.case_pass()
-                return
             self.base_page.click_elem_tag(operation_exam_menu)
             self.base_page.screen_shot()
             self.assertIs(self.base_page.displayed(operation_list), True, "进入[技术操作列表]异常！")
@@ -141,7 +137,7 @@ class AppTechnicalOperation(unittest.TestCase):
             self.log.error(e)
             # 用例失败，必须
             self.base_page.case_failed()
-            raise Exception
+            raise Exception("出现异常！")
         finally:
             self.base_page.back_to()
 

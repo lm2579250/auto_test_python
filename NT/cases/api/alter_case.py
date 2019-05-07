@@ -16,9 +16,13 @@ class AlterCase:
         return cls._instance
 
     def __init__(self):
-        self.log = MyLog.get_log().logger
-        self.common = Common()
-        self.api_cases_path, self.api_cases_dict = self.common.get_api_cases()
+        try:
+            self.log = MyLog.get_log().logger
+            self.common = Common()
+            self.api_cases_path, self.api_cases_dict = self.common.get_api_cases()
+        except Exception as e:
+            self.log.debug(e)
+            raise Exception("出现异常！")
 
     def produce_case(self):
         """生成所有api用例"""

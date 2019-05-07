@@ -11,7 +11,7 @@ from NT.cases.app.test_survey import AppSurvey
 from NT.cases.app.test_practice import AppPractice
 from NT.cases.app.test_curriculum import AppCurriculum
 from NT.cases.app.test_courseware import AppCourseware
-from NT.cases.app.test_technical_operation import AppTechnicalOperation
+from NT.cases.app.test_operation import AppOperation
 
 
 class Run(object):
@@ -38,7 +38,7 @@ class Run(object):
         """添加ui测试用例"""
         self.suit.addTest(WebLogin("test_web_login"))  # web登录
         self.suit.addTest(AppLogin("test_app_login"))  # app登录
-        self.suit.addTest(AppTechnicalOperation("test_app_operation"))  # 技术操作考核
+        self.suit.addTest(AppOperation("test_app_operation"))  # 技术操作考核
         self.suit.addTest(AppExams("test_app_exams"))  # 考试
         self.suit.addTest(AppPractice("test_app_practice"))  # 练习
         self.suit.addTest(AppSurvey("test_app_survey"))  # 问卷调查
@@ -65,13 +65,13 @@ if __name__ == "__main__":
     common = Common()
     start_time = common.get_now_time()
     # 方式一：
-    # run.add_api_test()
+    run.add_api_test()
     # run.add_ui_test()
-    # BeautifulReport(run.suit).report(log_path=run.path, filename="NT_测试报告.html", description='NT自动化测试')
+    BeautifulReport(run.suit).report(log_path=run.path, filename="NT_测试报告.html", description='NT自动化测试')
 
     #  方式二：
-    cases = run.add_cases()
-    run.run_cases(cases)
+    # cases = run.add_cases()
+    # run.run_cases(cases)
 
     # 提取错误日志
     run.my_log.extraction_error_log()

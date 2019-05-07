@@ -13,7 +13,7 @@ class AppSurvey(unittest.TestCase):
             self.log = MyLog().get_log().logger
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def test_app_survey(self):
         """app问卷调查"""
@@ -35,7 +35,7 @@ class AppSurvey(unittest.TestCase):
             self.log.error(e)
             # 用例失败，必须
             self.base_page.case_failed()
-            raise Exception
+            raise Exception("出现异常！")
         finally:
             self.base_page.back_to()
 
@@ -65,7 +65,7 @@ class AppSurvey(unittest.TestCase):
                 return False
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def answer(self):
         """答题"""
@@ -102,7 +102,8 @@ class AppSurvey(unittest.TestCase):
                     a = random.randint(0, radio_count - 1)
                     self.base_page.click_elem_tag(radio, tag=a)
                 elif "多选题" in problem_type:
-                    multiple = ("xpath", "//div[@class='survey-content'][%s]//div[@ng-repeat='option in question.questionOptionList']" % i)  # 多选题选项
+                    multiple = ("xpath",
+                                "//div[@class='survey-content'][%s]//div[@ng-repeat='option in question.questionOptionList']" % i)  # 多选题选项
                     multiple_count = len(self.base_page.find_elements(multiple))
                     b = random.randint(0, multiple_count - 1)
                     self.base_page.click_elem_tag(multiple, tag=b)
@@ -111,7 +112,8 @@ class AppSurvey(unittest.TestCase):
                         c = random.randint(0, multiple_count - 1)
                     self.base_page.click_elem_tag(multiple, tag=c)
                 elif "简答题" in problem_type:
-                    textarea = ("xpath", "//div[@class='survey-content'][%s]//textarea[@class='no-resize ng-pristine ng-untouched ng-invalid ng-invalid-required']" % i)  # 问答题输入框
+                    textarea = ("xpath",
+                                "//div[@class='survey-content'][%s]//textarea[@class='no-resize ng-pristine ng-untouched ng-invalid ng-invalid-required']" % i)  # 问答题输入框
                     self.base_page.input_tag(textarea, text=text)
                 i += 1
                 self.base_page.screen_shot()
@@ -120,8 +122,8 @@ class AppSurvey(unittest.TestCase):
             self.base_page.screen_shot()
             self.base_page.popup()
         except Exception as e:
-                self.log.error(e)
-                raise Exception
+            self.log.error(e)
+            raise Exception("出现异常！")
 
     def tearDown(self):
         self.base_page.case_end()

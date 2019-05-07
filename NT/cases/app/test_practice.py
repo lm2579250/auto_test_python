@@ -13,7 +13,7 @@ class AppPractice(unittest.TestCase):
             self.log = MyLog().get_log().logger
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def test_app_practice(self):
         """app练习"""
@@ -36,7 +36,7 @@ class AppPractice(unittest.TestCase):
             self.log.error(e)
             # 用例失败，必须
             self.base_page.case_failed()
-            raise Exception
+            raise Exception("出现异常！")
         finally:
             self.base_page.back_to()
 
@@ -68,7 +68,7 @@ class AppPractice(unittest.TestCase):
                 return False
         except Exception as e:
             self.log.error(e)
-            raise Exception
+            raise Exception("出现异常！")
 
     def answer(self):
         """答题"""
@@ -152,8 +152,8 @@ class AppPractice(unittest.TestCase):
             self.assertIs(self.base_page.displayed(result_element), True, "考试结果提交异常！")
             self.log.debug("练习完成！")
         except Exception as e:
-                self.log.error(e)
-                raise Exception
+            self.log.error(e)
+            raise Exception("出现异常！")
 
     def tearDown(self):
         self.base_page.case_end()
