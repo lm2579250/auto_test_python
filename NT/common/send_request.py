@@ -73,7 +73,7 @@ class SendRequest:
             return response
         except requests.exceptions.ConnectionError as e:
             self.log.error(e)
-            raise Exception("遇到网络问题！(如：DNS 查询失败、拒绝连接等)！")
+            raise Exception("遇到网络问题(如：DNS 查询失败、拒绝连接等)！")
         except requests.exceptions.HTTPError as e:
             self.log.error(e)
             raise Exception("HTTP 请求返回了不成功的状态码！")
