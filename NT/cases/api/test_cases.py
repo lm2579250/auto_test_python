@@ -94,11 +94,19 @@ class APITestCases(unittest.TestCase):
 
         APITestCases.execute_case(self, case_params, case_num, case_name)
 
-    def test_login_controller5(self):
+    def test_login_controller7(self):
         """文件上传"""
         case_params = {'principal': '李彬', 'remark': '文件上传', 'method': 'post', 'url': None, 'params': 'D:\\\\test_data\\\\summer_test_data_05.txt', 'msg': None, 'code': None}
         case_num = 5
-        case_name = 'login_controller5'
+        case_name = 'login_controller7'
+
+        APITestCases.execute_case(self, case_params, case_num, case_name)
+
+    def test_login_controller8(self):
+        """发发发"""
+        case_params = {'principal': '的地方', 'remark': '发发发', 'method': '方法', 'url': '发发发', 'params': '方法', 'msg': '方法', 'code': '方法'}
+        case_num = 6
+        case_name = 'login_controller8'
 
         APITestCases.execute_case(self, case_params, case_num, case_name)
 

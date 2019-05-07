@@ -18,24 +18,21 @@ class Run(object):
     def __init__(self):
         self.common = Common()
         self.my_log = MyLog()
-        self.alter_case = AlterCase()
         self.send_email = SendEmail()
-
+        self.alter_case = AlterCase()
         self.path = self.common.get_result_path()  # 获取报告存储路径
-        self.alter_case.produce_case()  # 自动生成接口测试用例
-        self.cases_path, self.cases_dict = self.common.get_api_cases()  # 获取api用例路径和用例dict
         self.log = self.my_log.get_log().logger  # log日志
         self.suit = unittest.TestSuite()  # 测试套件（定义执行顺序）
 
     # 方式一：
     def add_api_test(self):
         """添加api测试用例"""
-        # self.log.debug("用例路径：%s" % self.cases_path)
-        # self.log.debug(self.cases_dict)
-        # 生成所有用例解析函数类后导入TestCases
-        from NT.cases.api.test_cases import APITestCases
+        self.log.debug("用例路径：%s" % self.common.api_cases_path)
+        self.log.debug(self.common.api_cases_dict)
+        self.alter_case.produce_case()  # 自动生成接口测试用例
+        from NT.cases.api.test_cases import APITestCases  # 生成所有接口测试用例后导入TestCases类
 
-        for case_name, case_params in self.cases_dict.items():
+        for case_name, case_params in self.common.api_cases_dict.items():
             self.suit.addTest(APITestCases("test_%s" % case_name))
 
     # 方式一：
@@ -70,13 +67,13 @@ if __name__ == "__main__":
     common = Common()
     start_time = common.get_now_time()
     # 方式一：
-    run.add_api_test()
-    run.add_ui_test()
-    BeautifulReport(run.suit).report(log_path=run.path, filename="NT_测试报告.html", description='...')
+    # run.add_api_test()
+    # run.add_ui_test()
+    # BeautifulReport(run.suit).report(log_path=run.path, filename="NT_测试报告.html", description='...')
 
     #  方式二：
-    # cases = run.add_cases()
-    # run.run_cases(cases)
+    cases = run.add_cases()
+    run.run_cases(cases)
 
     # 提取错误日志
     run.my_log.extraction_error_log()
