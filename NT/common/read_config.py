@@ -1,5 +1,4 @@
 import os
-import codecs
 import threading
 import configparser
 from NT.common.common import Common
@@ -27,15 +26,14 @@ class ReadConfig(object):
             if not os.path.isfile(self.config_path):
                 raise Exception("文件%s不存在！" % self.config_path)
 
-            # 读取文件
-            with open(self.config_path, "r", encoding="utf-8") as file:
-                data = file.read()
-
-            # 去掉 BOM头后重新写入
-            if data[:3] == codecs.BOM_UTF8:
-                data = data[3:]
-                with open(self.config_path, "w", encoding="utf-8") as file:
-                    file.write(data)
+            # 判断是否有BOM头
+            bom = b'\xef\xbb\xbf'  # BOM头多出的内容
+            exist_bom = lambda s: True if s == bom else False  # 定义一个匿名函数
+            with open(self.config_path, 'rb') as fr:
+                if exist_bom(fr.read(3)):  # 读取头3个字节进行判断
+                    data = fr.read()
+                    with open(self.config_path, 'wb') as fw:
+                        fw.write(data)  # 利用二进制重新写入后BOM头就消失了
 
             # 读取文件
             self.cf = configparser.ConfigParser()

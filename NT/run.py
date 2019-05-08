@@ -3,7 +3,7 @@ from NT.common.log import MyLog
 from NT.common.common import Common
 from NT.common.send_email import SendEmail
 from BeautifulReport import BeautifulReport
-from NT.cases.api.alter_case import AlterCase
+from NT.cases.api.produce_cases import ProduceCases
 from NT.cases.web.test_login import WebLogin
 from NT.cases.app.test1_login import AppLogin
 from NT.cases.app.test_exams import AppExams
@@ -19,8 +19,8 @@ class Run(object):
         self.common = Common()
         self.my_log = MyLog()
         self.send_email = SendEmail()
-        self.alter_case = AlterCase()
-        self.alter_case.produce_case()  # 自动生成接口测试用例
+        self.cases = ProduceCases()
+        self.cases.produce_case()  # 自动生成接口测试用例
         self.path = self.common.get_result_path()  # 获取报告存储路径
         self.log = self.my_log.get_log().logger  # log日志
         self.suit = unittest.TestSuite()  # 测试套件（定义执行顺序）

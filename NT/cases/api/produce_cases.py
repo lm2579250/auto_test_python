@@ -3,7 +3,7 @@ from NT.common.log import MyLog
 from NT.common.common import Common
 
 
-class AlterCase:
+class ProduceCases:
     """利用base_case.py自动生成所有api测试用例的请求函数类test_cases.py"""
     _instance_lock = threading.Lock()  # 设置单例锁
 
