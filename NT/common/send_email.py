@@ -104,7 +104,7 @@ class SendEmail(object):
                 self.send()  # 发送邮件
                 self.result = True
             except Exception as e:
-                self.log.error("发送失败： %s" % e)
+                self.log.error("发送失败 %s" % e)
                 self.num += 1
             finally:
                 self.remove_result()  # 删除之前的结果文件夹

@@ -30,6 +30,7 @@ class AlterCase:
             self.log.debug("api用例路径：%s" % self.api_cases_path)
             self.log.debug("api用例数量：%s" % len(self.api_cases_dict))
             # self.log.debug(self.common.api_cases_dict)
+            self.log.debug("*" * 100 + "\n")
 
             # 拼接用例解析函数模板(base_case.py)路径
             base_case_path = Common.get_path("cases", "api", "base_case.py")
@@ -43,8 +44,6 @@ class AlterCase:
                     # 不需要改变的部分
                     i = 0  # 代码行数
                     for line in lines:
-                        if "class TestCase(unittest.TestCase):" in line:
-                            line = line.replace("class TestCase", "class APITestCases")
                         if "# 定位标记" in line:
                             break
                         file_new.write(line)
@@ -59,19 +58,19 @@ class AlterCase:
                             if j > i:
                                 if "def test_case(self):" in line:
                                     line = line.replace("test_case", "test_%s" % case_name)
-                                if "用例描述" in line:
+                                elif "用例描述" in line:
                                     line = line.replace("用例描述", str(case_params["remark"]))
-                                if "case_params = {}" in line:
+                                elif "case_params = {}" in line:
                                     line = line.replace("{}", str(case_params))
-                                if "case_num = 0" in line:
+                                elif "case_num = 0" in line:
                                     line = line.replace("0", "%s" % n)
-                                if "case_name = 'null'" in line:
+                                elif "case_name = 'null'" in line:
                                     line = line.replace("null", case_name)
-                                if "TestCase.execute_case" in line:
-                                    line = line.replace("TestCase.execute_case", "APITestCases.execute_case")
                                 file_new.write(line)
+                                if "self.execute_case" in line:
+                                    file_new.write("\n")
                             j += 1
                         n += 1
         except Exception as e:
-            self.log.error("请检测用例%s格式是否正确！" % case_name)
-            raise Exception(e)
+            self.log.error(e)
+            raise Exception("请检测用例%s格式是否正确！" % case_name)

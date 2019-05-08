@@ -65,13 +65,13 @@ if __name__ == "__main__":
     common = Common()
     start_time = common.get_now_time()
     # 方式一：
-    run.add_api_test()
+    # run.add_api_test()
     # run.add_ui_test()
-    BeautifulReport(run.suit).report(log_path=run.path, filename="NT_测试报告.html", description='NT自动化测试')
+    # BeautifulReport(run.suit).report(log_path=run.path, filename="NT_测试报告.html", description='NT自动化测试')
 
     #  方式二：
-    # cases = run.add_cases()
-    # run.run_cases(cases)
+    cases = run.add_cases()
+    run.run_cases(cases)
 
     # 提取错误日志
     run.my_log.extraction_error_log()

@@ -4,8 +4,8 @@ from NT.common.base_page import BasePage
 from NT.common.send_request import SendRequest
 
 
-class TestCase(unittest.TestCase):
-    """api请求类"""
+class APITestCases(unittest.TestCase):
+    """api测试用例"""
 
     def setUp(self):
         try:
@@ -79,5 +79,4 @@ class TestCase(unittest.TestCase):
         case_num = 0
         case_name = 'null'
 
-        TestCase.execute_case(self, case_params, case_num, case_name)
-
+        self.execute_case(case_params, case_num, case_name)
