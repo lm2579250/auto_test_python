@@ -57,6 +57,15 @@ class Log(object):
 class MyLog:
     log = None
     mutex = threading.Lock()
+    _instance_lock = threading.Lock()  # 设置单例锁
+
+    def __new__(cls, *args, **kwargs):
+        """单例模式(支持多线程)"""
+        if not hasattr(cls, "_instance"):
+            with cls._instance_lock:
+                if not hasattr(cls, "_instance"):
+                    cls._instance = object.__new__(cls)
+        return cls._instance
 
     def __init__(self):
         self.common = Common()

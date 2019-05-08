@@ -19,8 +19,8 @@ class ReadConfig(object):
 
     def __init__(self):
         try:
-            # 拼接配置文件路径
-            self.config_path = Common.get_path("data", "config.ini")
+            self.config_path = Common.get_path("data", "config.ini")  # 拼接配置文件路径
+            self.cf = configparser.ConfigParser()  # 读取配置文件的对象
 
             # 判断文件是否存在
             if not os.path.isfile(self.config_path):
@@ -36,7 +36,6 @@ class ReadConfig(object):
                         fw.write(data)  # 利用二进制重新写入后BOM头就消失了
 
             # 读取文件
-            self.cf = configparser.ConfigParser()
             self.cf.read(self.config_path, encoding="utf-8")
         except Exception as e:
             raise Exception("ReadConfig.__init__异常 %s" % e)
