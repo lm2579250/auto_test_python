@@ -21,7 +21,7 @@ class ProduceCases:
             self.common = Common()
             self.api_cases_path, self.api_cases_dict = self.common.get_api_cases()
         except Exception as e:
-            self.log.debug(e)
+            self.log.error(e)
             raise Exception("出现异常！")
 
     def produce_case(self):

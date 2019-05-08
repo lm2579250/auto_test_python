@@ -13,7 +13,7 @@ class APITestCases(unittest.TestCase):
             self.base_page = BasePage()
             self.log = MyLog.get_log().logger
         except Exception as e:
-            self.log.debug(e)
+            self.log.error(e)
             raise Exception("出现异常！")
 
     def execute_case(self, case_params, case_num, case_name):

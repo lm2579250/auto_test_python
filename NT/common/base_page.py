@@ -33,7 +33,7 @@ class BasePage(object):
             self.log = MyLog().get_log().logger
             self.common = Common()
         except Exception as e:
-            self.log.debug(e)
+            self.log.error(e)
             raise Exception("出现异常！")
 
     def open_app(self):
