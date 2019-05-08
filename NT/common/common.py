@@ -54,7 +54,7 @@ class Common(object):
     def get_api_cases(self):
         """从Excel中读取cases"""
         try:
-            # 拼接接口用例api_cases.xlsx路径
+            # 拼接接口用例api_cases.xlsx路径,文件后缀只能是".xlsx"
             self.api_cases_path = Common.get_path("data", "api_cases.xlsx")
 
             # 打开xls文件

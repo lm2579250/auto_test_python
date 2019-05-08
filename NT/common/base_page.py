@@ -58,7 +58,8 @@ class BasePage(object):
                             # 'app': app_address,
                             # 'chromeOptions': {'androidProcess': android_process}
                             }
-            self.app_driver = appium.webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)  # 操作APP端元素的webdriver实例
+            # 操作APP端元素的webdriver实例
+            self.app_driver = appium.webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
             self.current_driver = "app_driver"  # 标记为APP端用例
             time.sleep(10)
             self.switch_context()  # H5时需要切换context
@@ -238,12 +239,16 @@ class BasePage(object):
         """返回(首页)或指定元素页面(须该页独有元素)"""
         try:
             home_menu = ("css_selector", "span.tab-title.ng-binding")  # 首页底部menu
+            username_input = ("css_selector", "input[type='text']")  # 用户名输入框定位信息
+
             menu_elem = ()
             if args != ():
                 menu_elem = args[0]
             self.log.debug("返回")
             i = 1
             while i <= 5:  # 最多返回5级页面
+                if self.displayed(username_input):  # 判断是否处于登录页
+                    raise Exception("登录失败！")
                 self.back()
                 self.screen_shot()
                 if args == ():  # 返回首页
@@ -255,6 +260,8 @@ class BasePage(object):
                         break
                 self.log.debug("返回：%s" % i)
                 i += 1
+            else:
+                raise Exception("返回时异常！")
         except Exception as e:
             self.log.error(e)
             raise Exception("返回时异常！")

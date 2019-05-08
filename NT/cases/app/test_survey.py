@@ -127,3 +127,4 @@ class AppSurvey(unittest.TestCase):
 
     def tearDown(self):
         self.base_page.case_end()
+        self.base_page.quit()
