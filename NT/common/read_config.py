@@ -50,17 +50,17 @@ class ReadConfig(object):
 
     def get_web_param(self, value):
         """web参数"""
-        value = self.cf.get("web_param", value)
+        value = self.cf.get("web_params", value)
         return value
 
     def get_app_param(self, value):
         """app参数"""
-        value = self.cf.get("app_param", value)
+        value = self.cf.get("app_params", value)
         return value
 
     def get_http(self, name):
         """项目域名，端口，超时时长"""
-        value = self.cf.get("http", name)
+        value = self.cf.get("requests", name)
         return value
 
     def get_headers(self, name):
