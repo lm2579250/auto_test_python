@@ -26,7 +26,7 @@ class APITestCases(unittest.TestCase):
             # 期望返回的文本内容和状态码
             msg, code = "", ""
 
-            self.log.info("用例参数：%s" % case_params)
+            self.log.debug("用例参数：%s" % case_params)
             for param_key, param_value in case_params.items():
                 if param_key == "msg":
                     if isinstance(param_value, str):

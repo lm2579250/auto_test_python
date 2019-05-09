@@ -106,11 +106,15 @@ class BasePage(object):
 
     def back(self):
         """返回上一页"""
-        if self.current_driver == "web_driver":
-            self.web_driver.back()
-        else:
-            self.app_driver.keyevent(4)
-        time.sleep(0.5)
+        try:
+            if self.current_driver == "web_driver":
+                self.web_driver.back()
+            else:
+                self.app_driver.keyevent(4)
+            time.sleep(0.5)
+        except Exception as e:
+            self.log.error(e)
+            raise Exception("返回时异常！")
 
     def quit(self):
         """退出程序"""
@@ -193,7 +197,7 @@ class BasePage(object):
     def switch_context(self, tag=1):
         """切换环境，tag=0时为android原生context"""
         try:
-            contexts = self.app_driver.contexts   # 获取当前所有context
+            contexts = self.app_driver.contexts  # 获取当前所有context
             self.log.debug("contexts:%s" % contexts)
             if len(contexts) != 1:  # 需要切换context
                 self.app_driver.switch_to.context(contexts[tag])  # 切换context
@@ -499,40 +503,40 @@ class BasePage(object):
     #         except Exception as e:
     #             return False
 
-        # 方式二（速度较慢）：
-        # key = elements[0]
-        # value = elements[1]
-        # locator = None
-        #
-        # if key == "css_selector":
-        #     locator = (By.CSS_SELECTOR, value)
-        # elif key == "xpath":
-        #     locator = (By.XPATH, value)
-        # elif key == "id":
-        #     locator = (By.ID, value)
-        # elif key == "name":
-        #     locator = (By.NAME, value)
-        # elif key == "class":
-        #     locator = (By.CLASS_NAME, value)
-        # elif key == "link_text":
-        #     locator = (By.LINK_TEXT, value)
-        # elif key == "partial_link_text":
-        #     locator = (By.PARTIAL_LINK_TEXT, value)
-        # elif key == "tag_name":
-        #     locator = (By.TAG_NAME, value)
-        #
-        # if current_driver == "web_driver":
-        #     try:
-        #         WebDriverWait(self.web_driver, 20, 0.5).until(lambda x: x.find_element(*locator))
-        #         return True
-        #     except:
-        #         return False
-        # else:
-        #     try:
-        #         WebDriverWait(self.app_driver, 20, 0.5).until(lambda x: x.find_element(*locator))
-        #         return True
-        #     except:
-        #         return False
+    # 方式二（速度较慢）：
+    # key = elements[0]
+    # value = elements[1]
+    # locator = None
+    #
+    # if key == "css_selector":
+    #     locator = (By.CSS_SELECTOR, value)
+    # elif key == "xpath":
+    #     locator = (By.XPATH, value)
+    # elif key == "id":
+    #     locator = (By.ID, value)
+    # elif key == "name":
+    #     locator = (By.NAME, value)
+    # elif key == "class":
+    #     locator = (By.CLASS_NAME, value)
+    # elif key == "link_text":
+    #     locator = (By.LINK_TEXT, value)
+    # elif key == "partial_link_text":
+    #     locator = (By.PARTIAL_LINK_TEXT, value)
+    # elif key == "tag_name":
+    #     locator = (By.TAG_NAME, value)
+    #
+    # if current_driver == "web_driver":
+    #     try:
+    #         WebDriverWait(self.web_driver, 20, 0.5).until(lambda x: x.find_element(*locator))
+    #         return True
+    #     except:
+    #         return False
+    # else:
+    #     try:
+    #         WebDriverWait(self.app_driver, 20, 0.5).until(lambda x: x.find_element(*locator))
+    #         return True
+    #     except:
+    #         return False
 
     def displayed(self, elements, tag=0):
         """判断元素是否可见"""
