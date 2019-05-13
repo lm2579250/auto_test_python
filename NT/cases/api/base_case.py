@@ -47,21 +47,19 @@ class APITestCases(unittest.TestCase):
             self.log.debug("接口响应时长：%s s" % response.elapsed.total_seconds())
             self.log.debug("当前编码：%s" % response.encoding)
             self.log.debug("请求的url：%s" % response.url)
+            self.log.debug("Cookie：%s" % response.cookies.get_dict())
             self.log.debug("请求返回json：%s" % response.json())
             self.log.debug("请求头：%s" % response.request.headers)  # 发送到服务器的头信息
             self.log.debug("响应头：%s" % response.headers)  # 以字典对象存储服务器响应头，但是这个字典比较特殊，字典键不区分大小写，若键不存在则返回None
             # self.log.debug(response.history)  # 返回重定向信息,当然可以在请求时加上allow_redirects = false 阻止重定向
             # self.log.debug(response.raw.read())  # 返回原始响应体，也就是 urllib 的 response 对象，使用 r.raw.read()
             # self.log.debug(response.content)  # 以字节形式（二进制）返回，中文显示为字符。字节方式的响应体，会自动为你解码 gzip 和 deflate 压缩
-            # self.log.debug("cookies：%s" % response.cookies)
-            # sid = jsonpath(response.json(), '$..sid')  # sid = jsonpath(req, '$..sid')[0]
-            # self.log.debug("sid：%s" % sid)
 
             # 断言
             tip = response.json()["tip"]
-            actual_code = response.json()["code"]
-            self.assertEqual(msg, tip, "msg期望值：%s，实际值%s" % (msg, tip))
-            self.assertEqual(code, actual_code, "code期望值：%s，实际值%s" % (code, actual_code))
+            actual_code = response.json()["ret"]
+            self.assertEqual(msg, tip, "msg期望值：%s，实际值：%s" % (msg, tip))
+            self.assertEqual(code, actual_code, "code期望值：%s，实际值：%s" % (code, actual_code))
 
             response.raise_for_status()  # 状态码不是200时抛出异常
             self.base_page.case_pass()

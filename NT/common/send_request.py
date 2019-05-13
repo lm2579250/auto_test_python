@@ -20,25 +20,31 @@ class SendRequest:
 
     def __init__(self):
         try:
-            global host, timeout, headers
+            global origin, timeout, headers
             self.log = MyLog.get_log().logger
             self.config = ReadConfig()
-            self.session = requests.Session()
+            self.session = requests.session()  # 一个session对象会保持同一个会话中的所有请求之间的cookie信息，此方法只适用于是cookies且没有有效期的，token的没用
 
             # 从配置文件中读取信息
             # 获取域名
-            host = self.config.get_http("url")
+            origin = self.config.get_origin("origin")
             # 获取超时时长
-            timeout = self.config.get_http("timeout")
+            timeout = self.config.get_origin("timeout")
             # 获取headers，并将str转换为dict
             headers = json.loads(self.config.get_headers("headers"))
+            # 获取cookie，并将str转换为dict
+            cookie = json.loads(self.config.get_headers("cookie"))
+            if cookie != {}:
+                requests.utils.add_dict_to_cookiejar(self.session.cookies, cookie)
         except Exception as e:
             self.log.error(e)
             raise Exception("出现异常！")
 
     def send_request(self, case_params):
         """发送请求"""
-        method, url, params, files = "", "", "", {}
+        method, url, body, file = "", "", "", {}
+        response = None
+
         try:
             # 解析case_params中的参数
             for param_key, param_value in case_params.items():
@@ -46,30 +52,35 @@ class SendRequest:
                     if param_key == "method":
                         method = param_value
                     elif param_key == "url":
-                        url = host + param_value
-                    elif param_key == "params":
+                        url = origin + param_value
+                    elif param_key == "body":
                         if ":" in param_value and "/" in param_value or "\\" in param_value:
                             if os.path.exists(param_value):  # 判断是否是一个文件路径且存在
-                                files = {'file': open(param_value, 'rb')}  # 上传文件必须open
+                                file = {'file': open(param_value, 'rb')}  # 上传文件必须open
                             else:
                                 raise Exception("需要上传文件的路径错误：%s" % param_value)
                         else:
-                            params = json.loads(param_value)  # 将str转换为dict
+                            try:
+                                body = json.loads(param_value)  # 将str转换为dict
+                            except Exception as e:
+                                self.log.debug(e)
+                                body = param_value  # 不能转换时
                         break
                 else:
                     raise Exception("api用例中%s类型错误！" % param_key)
 
             self.log.debug("预设超时时长：%s s" % timeout)
-            response = None
+
             # 不验证ssl, verify=False
             if method == "get":
-                response = self.session.get(url, params=params, headers=headers, timeout=float(timeout),
+                response = self.session.get(url=url, params=body, headers=headers, timeout=float(timeout),
                                             verify=False)
             elif method == "post":
-                response = self.session.post(url, data=params, headers=headers, files=files,
+                response = self.session.post(url=url, data=body, headers=headers, files=file,
                                              timeout=float(timeout), verify=False)
-                # 请求成功后更新token
-                self.update_token(response)
+
+            # 请求成功后更新cookie
+            self.update_cookie(response)
             return response
         except requests.exceptions.ConnectionError as e:
             self.log.error(e)
@@ -90,15 +101,20 @@ class SendRequest:
             self.log.error(e)
             raise Exception("请求异常！")
 
-    def update_token(self, response):
+    def update_cookie(self, response):
         """更新token"""
         try:
-            req = json.loads(response)  # 将str转换为dict
-
-            if "token" in req:
-                token = req["token"]
-                headers["token"] = token
-                self.config.set_web_headers(json.dumps(headers))  # 将dict转换为str
+            cookie = response.cookies.get_dict()
+            self.log.debug(cookie)
+            if cookie != {}:
+                str_cookie = json.dumps(cookie)  # 转为str类型
+                self.config.set_headers(str_cookie)
+            # res = response.headers  # 转换为dict
+            #
+            # if "Set-Cookie" in res:
+            #     cookie = res["Set-Cookie"]
+            #     headers["Set-Cookie"] = cookie
+            #     self.config.set_headers(json.dumps(headers))  # 将dict转换为str
         except Exception as e:
             self.log.error(e)
             raise Exception("更新token时异常！")
