@@ -30,8 +30,9 @@ class Run(object):
         """添加api测试用例"""
         from NT.cases.api.test_cases import APITestCases  # 生成所有接口测试用例后导入TestCases类
 
-        for case_name, case_params in self.common.api_cases_dict.items():
-            self.suit.addTest(APITestCases("test_%s" % case_name))
+        for origin, sheet_dict in self.common.api_cases_dict.items():
+            for case_name, case_params in sheet_dict.items():
+                self.suit.addTest(APITestCases("test_%s" % case_name))
 
     # 方式一：
     def add_ui_test(self):

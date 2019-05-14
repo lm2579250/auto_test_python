@@ -29,7 +29,7 @@ class ProduceCases:
         try:
             self.log.debug("api用例路径：%s" % self.api_cases_path)
             self.log.debug("api用例数量：%s" % len(self.api_cases_dict))
-            # self.log.debug(self.common.api_cases_dict)
+            self.log.debug(self.common.api_cases_dict)
             self.log.debug("*" * 100 + "\n")
 
             # 拼接用例解析函数模板(base_case.py)路径
@@ -52,25 +52,28 @@ class ProduceCases:
                     # 需要改变的部分
                     n = 1  # 用例编号
                     global case_name
-                    for case_name, case_params in self.api_cases_dict.items():
-                        j = 0
-                        for line in lines:
-                            if j > i:
-                                if "def test_case(self):" in line:
-                                    line = line.replace("test_case", "test_%s" % case_name)
-                                elif "用例描述" in line:
-                                    line = line.replace("用例描述", str(case_params["remark"]))
-                                elif "case_params = {}" in line:
-                                    line = line.replace("{}", str(case_params))
-                                elif "case_num = 0" in line:
-                                    line = line.replace("0", "%s" % n)
-                                elif "case_name = 'null'" in line:
-                                    line = line.replace("null", case_name)
-                                file_new.write(line)
-                                if "self.execute_case" in line:
-                                    file_new.write("\n")
-                            j += 1
-                        n += 1
+                    for origin, sheet_dict in self.api_cases_dict.items():
+                        for case_name, case_params in sheet_dict.items():
+                            j = 0
+                            for line in lines:
+                                if j > i:
+                                    if "def test_case(self):" in line:
+                                        line = line.replace("test_case", "test_%s" % case_name)
+                                    elif "用例描述" in line:
+                                        line = line.replace("用例描述", str(case_params["remark"]))
+                                    elif "case_params = {}" in line:
+                                        line = line.replace("{}", str(case_params))
+                                    elif "origin = 'null'" in line:
+                                        line = line.replace("null", origin)
+                                    elif "case_name = 'null'" in line:
+                                        line = line.replace("null", case_name)
+                                    elif "case_num = 0" in line:
+                                        line = line.replace("0", "%s" % n)
+                                    file_new.write(line)
+                                    if "self.execute_case" in line:
+                                        file_new.write("\n")
+                                j += 1
+                            n += 1
         except Exception as e:
             self.log.error(e)
             raise Exception("请检测用例%s格式是否正确！" % case_name)

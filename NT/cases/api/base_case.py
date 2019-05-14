@@ -16,7 +16,7 @@ class APITestCases(unittest.TestCase):
             self.log.error(e)
             raise Exception("出现异常！")
 
-    def execute_case(self, case_params, case_num, case_name):
+    def execute_case(self, origin, case_params, case_name, case_num):
         """api请求实现"""
         try:
             # 从用例中提取负责人姓名
@@ -40,7 +40,7 @@ class APITestCases(unittest.TestCase):
                         raise Exception("api用例中code类型错误！")
 
             # 发起请求
-            response = self.request.send_request(case_params)
+            response = self.request.send_request(origin, case_params)
 
             self.log.debug("是否请求成功：%s" % response.ok)  # 查看response.ok的布尔值判断是否请求成功
             self.log.debug("返回状态码：%s" % response.status_code)  # 失败请求(非200响应)抛出异常
@@ -74,7 +74,8 @@ class APITestCases(unittest.TestCase):
     def test_case(self):
         """用例描述"""
         case_params = {}
-        case_num = 0
+        origin = 'null'
         case_name = 'null'
+        case_num = 0
 
-        self.execute_case(case_params, case_num, case_name)
+        self.execute_case(origin, case_params, case_name, case_num)

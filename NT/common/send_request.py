@@ -20,32 +20,34 @@ class SendRequest:
 
     def __init__(self):
         try:
-            global origin, timeout, headers
+            global timeout, headers
             self.log = MyLog.get_log().logger
             self.config = ReadConfig()
             self.session = requests.session()  # 一个session对象会保持同一个会话中的所有请求之间的cookie信息，此方法只适用于是cookies且没有有效期的，token的没用
 
             # 从配置文件中读取信息
-            # 获取域名
-            origin = self.config.get_origin("origin")
             # 获取超时时长
-            timeout = self.config.get_origin("timeout")
+            timeout = self.config.get_http("timeout")
             # 获取headers，并将str转换为dict
-            headers = json.loads(self.config.get_headers("headers"))
+            headers = json.loads(self.config.get_http("headers"))
             # 获取cookie，并将str转换为dict
-            cookie = json.loads(self.config.get_headers("cookie"))
+            cookie = json.loads(self.config.get_http("cookie"))
             if cookie != {}:
-                requests.utils.add_dict_to_cookiejar(self.session.cookies, cookie)
+                requests.utils.add_dict_to_cookiejar(self.session.cookies, cookie)  # 添加cookie,保持登录
         except Exception as e:
             self.log.error(e)
             raise Exception("出现异常！")
 
-    def send_request(self, case_params):
+    def send_request(self, origin, case_params):
         """发送请求"""
         method, url, body, file = "", "", "", {}
         response = None
 
         try:
+            # origin2 = json.dumps(origin)  # 转为str类型
+            # self.config.update_http("origin", origin)  # 写入配置文件中
+            # # 获取访问地址原点
+            # origin1 = self.config.get_http("origin")
             # 解析case_params中的参数
             for param_key, param_value in case_params.items():
                 if isinstance(param_value, str):
@@ -53,6 +55,7 @@ class SendRequest:
                         method = param_value
                     elif param_key == "url":
                         url = origin + param_value
+                        self.log.debug(url)
                     elif param_key == "body":
                         if ":" in param_value and "/" in param_value or "\\" in param_value:
                             if os.path.exists(param_value):  # 判断是否是一个文件路径且存在
@@ -80,7 +83,7 @@ class SendRequest:
                                              timeout=float(timeout), verify=False)
 
             # 请求成功后更新cookie
-            self.update_cookie(response)
+            self.get_cookie(response)
             return response
         except requests.exceptions.ConnectionError as e:
             self.log.error(e)
@@ -101,20 +104,13 @@ class SendRequest:
             self.log.error(e)
             raise Exception("请求异常！")
 
-    def update_cookie(self, response):
-        """更新token"""
+    def get_cookie(self, response):
+        """保存cookie"""
         try:
             cookie = response.cookies.get_dict()
-            self.log.debug(cookie)
             if cookie != {}:
                 str_cookie = json.dumps(cookie)  # 转为str类型
-                self.config.set_headers(str_cookie)
-            # res = response.headers  # 转换为dict
-            #
-            # if "Set-Cookie" in res:
-            #     cookie = res["Set-Cookie"]
-            #     headers["Set-Cookie"] = cookie
-            #     self.config.set_headers(json.dumps(headers))  # 将dict转换为str
+                self.config.update_http("cookie", str_cookie)  # 写入配置文件中
         except Exception as e:
             self.log.error(e)
-            raise Exception("更新token时异常！")
+            raise Exception("保存cookie时异常！")

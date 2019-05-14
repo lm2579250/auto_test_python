@@ -40,9 +40,9 @@ class ReadConfig(object):
         except Exception as e:
             raise Exception("ReadConfig.__init__异常 %s" % e)
 
-    def set_headers(self, value):
+    def update_http(self, key, value):
         """"更新配置文件中的headers"""
-        self.cf.set("headers", "cookie", value)
+        self.cf.set("http", key, value)
         self.cf.write(open(self.config_path, "w", encoding="utf-8"))
 
     def get_web_param(self, value):
@@ -55,14 +55,9 @@ class ReadConfig(object):
         value = self.cf.get("app_params", value)
         return value
 
-    def get_origin(self, name):
-        """传输协议，项目域名，端口，超时时长"""
-        value = self.cf.get("origin", name)
-        return value
-
-    def get_headers(self, name):
-        """headers信息"""
-        value = self.cf.get("headers", name)
+    def get_http(self, name):
+        """传输协议，项目域名，端口，超时时长,cookie,headers"""
+        value = self.cf.get("http", name)
         return value
 
     def get_email(self, name):
