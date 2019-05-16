@@ -28,9 +28,7 @@ class ProduceCases:
         """生成所有api用例"""
         try:
             self.log.debug("api用例路径：%s" % self.api_cases_path)
-            # self.log.debug("api用例数量：%s" % len(self.api_cases_dict))
             self.log.debug(self.common.api_cases_dict)
-            self.log.debug("*" * 100 + "\n")
 
             # 拼接用例解析函数模板(base_case.py)路径
             base_case_path = Common.get_path("cases", "api", "base_case.py")
@@ -51,13 +49,13 @@ class ProduceCases:
                         i += 1
 
                     # 需要改变的部分
-                    n = 1  # 用例编号
+                    n = 0  # 用例编号
                     global case_name  # 用例名
                     for origin, sheet_dict in self.api_cases_dict.items():
                         # key:origin(项目地址原点),value:sheet_dict(单个sheet中的用例集合)
                         for case_name, case_params in sheet_dict.items():
                             # key:case_name(用例名),value:case_params(一条用例)
-
+                            n += 1
                             j = i  # 需要改变的行号
                             while j < len(lines):  # 动态生成一个用例
                                 if "def test_case(self):" in lines[j]:
@@ -79,7 +77,9 @@ class ProduceCases:
 
                                 file_new.write(line)
                                 j += 1
-                            n += 1
+
+                    self.log.debug("api用例数量：%s" % n)
+                    self.log.debug("*" * 100 + "\n")
         except Exception as e:
             self.log.error(e)
             raise Exception("请检测用例%s格式是否正确！" % case_name)

@@ -45,7 +45,7 @@ class APITestCases(unittest.TestCase):
             self.log.debug("是否请求成功：%s" % response.ok)  # 查看response.ok的布尔值判断是否请求成功
             self.log.debug("返回状态码：%s" % response.status_code)  # 失败请求(非200响应)抛出异常
             self.log.debug("接口响应时长：%s s" % response.elapsed.total_seconds())
-            self.log.debug("当前编码：%s" % response.encoding)
+            self.log.debug("编码格式：%s" % response.encoding)
             self.log.debug("请求的url：%s" % response.url)
             self.log.debug("Cookie：%s" % response.cookies.get_dict())
             self.log.debug("请求返回json：%s" % response.json())

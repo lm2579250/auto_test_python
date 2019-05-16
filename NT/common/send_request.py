@@ -55,7 +55,6 @@ class SendRequest:
                         method = param_value
                     elif param_key == "url":
                         url = origin + param_value
-                        self.log.debug(url)
                     elif param_key == "body":
                         if ":" in param_value and "/" in param_value or "\\" in param_value:
                             if os.path.exists(param_value):  # 判断是否是一个文件路径且存在

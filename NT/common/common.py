@@ -106,7 +106,7 @@ class Common(object):
                 self.api_cases_dict[origin] = api_sheet_dict
                 case_key = []  # 一个sheet遍历完后用例名list case_key置空
                 api_sheet_dict = {}
-            print(self.api_cases_dict)
+
             return self.api_cases_path, self.api_cases_dict
         except Exception as e:
             raise Exception("Common.get_api_cases异常 %s" % e)
