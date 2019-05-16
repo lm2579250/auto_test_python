@@ -27,32 +27,31 @@ class SendRequest:
 
             # 从配置文件中读取信息
             # 获取超时时长
-            timeout = self.config.get_http("timeout")
+            timeout = self.config.get_api_params("timeout")
             # 获取headers，并将str转换为dict
-            headers = json.loads(self.config.get_http("headers"))
+            headers = json.loads(self.config.get_api_params("headers"))
             # 获取cookie，并将str转换为dict
-            cookie = json.loads(self.config.get_http("cookie"))
-            if cookie != {}:
-                requests.utils.add_dict_to_cookiejar(self.session.cookies, cookie)  # 添加cookie,保持登录
+            cookie = json.loads(self.config.get_api_params("cookie"))
+            requests.utils.add_dict_to_cookiejar(self.session.cookies, cookie)  # 添加cookie,保持登录
         except Exception as e:
             self.log.error(e)
             raise Exception("出现异常！")
 
     def send_request(self, origin, case_params):
-        """发送请求"""
+        """发送请求，origin为request中的origin，case_params为测试用例中的数据"""
         method, url, body, file = "", "", "", {}
         response = None
 
         try:
-            # 动态修改headers
-            host = origin[origin.index("//")+2:]
+            # 修改headers
+            host = origin[origin.index("//")+2:]  # 截取"//"后的内容
             headers["Host"] = host
             headers["Origin"] = origin
-            self.config.update_http("headers", headers)
+            self.config.update_api_params("headers", headers)
 
             # 解析case_params中的参数
             for param_key, param_value in case_params.items():
-                if isinstance(param_value, str):
+                if isinstance(param_value, str):  # 判断是否是str类型
                     if param_key == "method":
                         method = param_value
                     elif param_key == "url":
@@ -64,11 +63,7 @@ class SendRequest:
                             else:
                                 raise Exception("需要上传文件的路径错误：%s" % param_value)
                         else:
-                            try:
-                                body = json.loads(param_value)  # 将str转换为dict
-                            except Exception as e:
-                                self.log.debug(e)
-                                body = param_value  # 不能转换时
+                            body = json.loads(param_value)  # 将str转换为dict
                         break
                 else:
                     raise Exception("api用例中%s类型错误！" % param_key)
@@ -82,7 +77,6 @@ class SendRequest:
             elif method == "post":
                 response = self.session.post(url=url, data=body, headers=headers, files=file,
                                              timeout=float(timeout), verify=False)
-
             # 请求成功后更新cookie
             self.get_cookie(response)
             return response
@@ -110,7 +104,7 @@ class SendRequest:
         try:
             cookie = response.cookies.get_dict()
             if cookie != {}:
-                self.config.update_http("cookie", cookie)  # 写入配置文件中
+                self.config.update_api_params("cookie", cookie)  # 写入配置文件中
         except Exception as e:
             self.log.error(e)
             raise Exception("保存cookie时异常！")

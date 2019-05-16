@@ -47,7 +47,7 @@ class APITestCases(unittest.TestCase):
             self.log.debug("接口响应时长：%s s" % response.elapsed.total_seconds())
             self.log.debug("编码格式：%s" % response.encoding)
             self.log.debug("请求的url：%s" % response.url)
-            self.log.debug("Cookie：%s" % response.cookies.get_dict())
+            # self.log.debug("Cookie：%s" % response.cookies.get_dict())
             self.log.debug("请求返回json：%s" % response.json())
             self.log.debug("请求头：%s" % response.request.headers)  # 发送到服务器的头信息
             self.log.debug("响应头：%s" % response.headers)  # 以字典对象存储服务器响应头，但是这个字典比较特殊，字典键不区分大小写，若键不存在则返回None

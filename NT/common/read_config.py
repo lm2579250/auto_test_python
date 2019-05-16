@@ -29,9 +29,9 @@ class ReadConfig(object):
 
             # 判断是否有BOM头
             bom = b'\xef\xbb\xbf'  # BOM头多出的内容
-            exist_bom = lambda s: True if s == bom else False  # 定义一个匿名函数
+            judge_bom = lambda s: True if s == bom else False  # 定义一个匿名函数
             with open(self.config_path, 'rb') as fr:
-                if exist_bom(fr.read(3)):  # 读取头3个字节进行判断
+                if judge_bom(fr.read(3)):  # 读取头3个字节进行判断
                     data = fr.read()
                     with open(self.config_path, 'wb') as fw:
                         fw.write(data)  # 利用二进制重新写入后BOM头就消失了
@@ -41,9 +41,9 @@ class ReadConfig(object):
         except Exception as e:
             raise Exception("ReadConfig.__init__异常 %s" % e)
 
-    def update_http(self, key, value):
+    def update_api_params(self, key, value):
         """"更新配置文件中的headers"""
-        self.cf.set("http", key, json.dumps(value))
+        self.cf.set("api_params", key, json.dumps(value))  # 转换为str
         self.cf.write(open(self.config_path, "w", encoding="utf-8"))
 
     def get_web_param(self, value):
@@ -56,17 +56,17 @@ class ReadConfig(object):
         value = self.cf.get("app_params", value)
         return value
 
-    def get_http(self, name):
+    def get_api_params(self, name):
         """传输协议，项目域名，端口，超时时长,cookie,headers"""
-        value = self.cf.get("http", name)
-        return value
-
-    def get_email(self, name):
-        """邮箱配置"""
-        value = self.cf.get("email", name)
+        value = self.cf.get("api_params", name)
         return value
 
     def get_db(self, name):
         """数据库配置"""
         value = self.cf.get("database", name)
+        return value
+
+    def get_email(self, name):
+        """邮箱配置"""
+        value = self.cf.get("email", name)
         return value

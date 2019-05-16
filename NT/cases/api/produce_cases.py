@@ -32,7 +32,7 @@ class ProduceCases:
 
             # 拼接用例解析函数模板(base_case.py)路径
             base_case_path = Common.get_path("cases", "api", "base_case.py")
-            # 拼接存放生成的所有测试用例的文件名
+            # 拼接存放生成的所有测试用例的文件路径
             test_cases_path = Common.get_path("cases", "api", "test_cases.py")
 
             with open(base_case_path, "r", encoding="utf-8") as file_old:  # 从file_old中读取

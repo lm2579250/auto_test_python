@@ -62,15 +62,15 @@ class Common(object):
             # 获取workbook中所有的sheet
             sheets = wb.sheetnames
 
-            # case_dict结构： case_dict = {case_key:case_value}/case_dict = {case_key:{param_key: param_value}}
+            # api_case_dict结构： case_dict = {case_key:case_value}/case_dict = {case_key:{param_key: param_value}}
             # case_value = {param_key: param_value}
-            # cases_dict = {}  # case字典
+            # api_cases_dict = {}  # case字典
+            # origin = ""  # api用例请求地址原点
             api_sheet_dict = {}  # 每个sheet中的api用例
             case_key = []  # case_dict的key(case_name)
             case_value = {}  # case_dict的value(principal,remark,method,url,params,msg,code及其值组成的dict)
             case_param_key = []  # case_value的key(principal,remark,method,url,params,msg,code)
             # case_param_value = ""  # case_value的value(principal,remark,method,url,params,msg,code的值)
-            # origin = ""  # api用例请求地址原点
 
             print("Sheet数量：%s" % len(sheets))
             # 循环遍历所有sheet
@@ -80,21 +80,19 @@ class Common(object):
 
                 origin = sheet.cell(row=1, column=1).value  # 获取第一行第一列的api用例请求地址原点
                 if len(case_param_key) == 0:  # 判断是否已经添加case_param_key
-                    for r in range(2, 3):  # 遍历第二行，获取case_param_key
-                        for c in range(2, sheet.max_column + 1):  # 遍历第二行的所有列
-                            param_key = sheet.cell(row=r, column=c).value
-                            case_param_key.append(param_key)
-                # 从第三行开始循环遍历所有行获取用例
-                for r in range(3, sheet.max_row + 1):
-                    if sheet.cell(row=r, column=1).value is not None:
-                        # 从第三行开始的第一列为用例名，用list case_key保存
-                        key = sheet.cell(row=r, column=1).value  # 获取用例名
+                    for c in range(2, sheet.max_column + 1):  # 从第二列开始遍历每一列
+                        param_key = sheet.cell(row=2, column=c).value  # 遍历第二行的所有列，获取case_param_key
+                        case_param_key.append(param_key)
+
+                for r in range(3, sheet.max_row + 1):  # 从第三行开始循环遍历所有行获取用例
+                    if sheet.cell(row=r, column=1).value is not None:  # 判断每一行的第一列是否为空
+                        key = sheet.cell(row=r, column=1).value  # 从第三行开始的第一列为用例名，用list case_key保存
                         if key not in self.api_cases_dict:
                             case_key.append(key)
                         else:
                             raise Exception("api用例名%s重复" % key)
-                        # 从第三行的第二列开始为用例数据，用字符串 case_param_value保存
-                        for c in range(2, sheet.max_column + 1):
+
+                        for c in range(2, sheet.max_column + 1):  # 从第三行的第二列开始为用例数据，用字符串 case_param_value保存
                             case_param_value = sheet.cell(row=r, column=c).value  # 获取用例值
                             # 将参数类型case_param_key和用例数据组case_param_value成字典case_value
                             case_value[case_param_key[c - 2]] = case_param_value
@@ -103,7 +101,8 @@ class Common(object):
                         case_value = {}  # 一个用例遍历完后用例值dict case_value置空
                     else:
                         break
-                self.api_cases_dict[origin] = api_sheet_dict
+
+                self.api_cases_dict[origin] = api_sheet_dict  # 将每一个sheet中的用例存入api_cases_dict
                 case_key = []  # 一个sheet遍历完后用例名list case_key置空
                 api_sheet_dict = {}
 
