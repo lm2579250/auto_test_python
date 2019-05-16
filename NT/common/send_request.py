@@ -44,10 +44,12 @@ class SendRequest:
         response = None
 
         try:
-            # origin2 = json.dumps(origin)  # 转为str类型
-            # self.config.update_http("origin", origin)  # 写入配置文件中
-            # # 获取访问地址原点
-            # origin1 = self.config.get_http("origin")
+            # 动态修改headers
+            host = origin[origin.index("//")+2:]
+            headers["Host"] = host
+            headers["Origin"] = origin
+            self.config.update_http("headers", headers)
+
             # 解析case_params中的参数
             for param_key, param_value in case_params.items():
                 if isinstance(param_value, str):
@@ -108,8 +110,7 @@ class SendRequest:
         try:
             cookie = response.cookies.get_dict()
             if cookie != {}:
-                str_cookie = json.dumps(cookie)  # 转为str类型
-                self.config.update_http("cookie", str_cookie)  # 写入配置文件中
+                self.config.update_http("cookie", cookie)  # 写入配置文件中
         except Exception as e:
             self.log.error(e)
             raise Exception("保存cookie时异常！")

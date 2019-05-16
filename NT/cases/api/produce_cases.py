@@ -28,7 +28,7 @@ class ProduceCases:
         """生成所有api用例"""
         try:
             self.log.debug("api用例路径：%s" % self.api_cases_path)
-            self.log.debug(self.common.api_cases_dict)
+            # self.log.debug(self.common.api_cases_dict)
 
             # 拼接用例解析函数模板(base_case.py)路径
             base_case_path = Common.get_path("cases", "api", "base_case.py")

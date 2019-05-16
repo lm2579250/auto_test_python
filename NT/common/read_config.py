@@ -1,4 +1,5 @@
 import os
+import json
 import threading
 import configparser
 from NT.common.common import Common
@@ -42,7 +43,7 @@ class ReadConfig(object):
 
     def update_http(self, key, value):
         """"更新配置文件中的headers"""
-        self.cf.set("http", key, value)
+        self.cf.set("http", key, json.dumps(value))
         self.cf.write(open(self.config_path, "w", encoding="utf-8"))
 
     def get_web_param(self, value):
