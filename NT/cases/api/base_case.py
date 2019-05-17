@@ -19,12 +19,9 @@ class APITestCases(unittest.TestCase):
     def execute_case(self, origin, case_params, case_name, case_num):
         """api请求实现"""
         try:
-            # 从用例中提取负责人姓名
-            principal = case_params["principal"]
-            # 用例开始头部信息
-            self.base_page.case_start(principal, case_name, case_num)
-            # 期望返回的文本内容和状态码
-            msg, code = "", ""
+            principal = case_params["principal"]  # 从用例中提取负责人姓名
+            self.base_page.case_start(principal, case_name, case_num)  # 用例开始头部信息
+            msg, code = "", ""  # 期望返回的文本内容和状态码
 
             self.log.debug("用例参数：%s" % case_params)
             for param_key, param_value in case_params.items():
@@ -39,8 +36,7 @@ class APITestCases(unittest.TestCase):
                     else:
                         raise Exception("api用例中code类型错误！")
 
-            # 发起请求
-            response = self.request.send_request(origin, case_params)
+            response = self.request.send_request(origin, case_params)  # 发起请求
 
             self.log.debug("是否请求成功：%s" % response.ok)  # 查看response.ok的布尔值判断是否请求成功
             self.log.debug("返回状态码：%s" % response.status_code)  # 失败请求(非200响应)抛出异常
@@ -56,8 +52,8 @@ class APITestCases(unittest.TestCase):
             # self.log.debug(response.content)  # 以字节形式（二进制）返回，中文显示为字符。字节方式的响应体，会自动为你解码 gzip 和 deflate 压缩
 
             # 断言
-            tip = response.json()["tip"]
-            actual_code = response.json()["ret"]
+            tip = response.json()["tip"]  # 返回文本内容
+            actual_code = response.json()["ret"]  # 返回状态码
             self.assertEqual(msg, tip, "msg期望值：%s，实际值：%s" % (msg, tip))
             self.assertEqual(code, actual_code, "code期望值：%s，实际值：%s" % (code, actual_code))
 

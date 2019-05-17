@@ -20,7 +20,7 @@ class Run(object):
         self.my_log = MyLog()
         self.send_email = SendEmail()
         self.cases = ProduceCases()
-        # self.cases.produce_case()  # 自动生成接口测试用例
+        self.cases.produce_case()  # 自动生成接口测试用例
         self.path = self.common.get_result_path()  # 获取报告存储路径
         self.log = self.my_log.get_log().logger  # log日志
         self.suit = unittest.TestSuite()  # 测试套件（定义执行顺序）

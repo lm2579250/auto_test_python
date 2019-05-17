@@ -30,10 +30,8 @@ class ProduceCases:
             self.log.debug("api用例路径：%s" % self.api_cases_path)
             # self.log.debug(self.common.api_cases_dict)
 
-            # 拼接用例解析函数模板(base_case.py)路径
-            base_case_path = Common.get_path("cases", "api", "base_case.py")
-            # 拼接存放生成的所有测试用例的文件路径
-            test_cases_path = Common.get_path("cases", "api", "test_cases.py")
+            base_case_path = Common.get_path("cases", "api", "base_case.py")  # 拼接用例解析函数模板(base_case.py)路径
+            test_cases_path = Common.get_path("cases", "api", "test_cases.py")  # 拼接存放生成的所有测试用例的文件路径
 
             with open(base_case_path, "r", encoding="utf-8") as file_old:  # 从file_old中读取
                 with open(test_cases_path, "w", encoding="utf-8") as file_new:  # 写入file_new中
@@ -53,8 +51,7 @@ class ProduceCases:
                     global case_name  # 用例名
                     for origin, sheet_dict in self.api_cases_dict.items():
                         # key:origin(项目地址原点),value:sheet_dict(单个sheet中的用例集合)
-                        for case_name, case_params in sheet_dict.items():
-                            # key:case_name(用例名),value:case_params(一条用例)
+                        for case_name, case_params in sheet_dict.items():  # key:case_name(用例名),value:case_params(一条用例)
                             n += 1
                             j = i  # 需要改变的行号
                             while j < len(lines):  # 动态生成一个用例

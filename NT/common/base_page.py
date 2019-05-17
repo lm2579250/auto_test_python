@@ -78,6 +78,7 @@ class BasePage(object):
                 driver = selenium.webdriver.Ie()
             else:
                 raise Exception(self.log.error("没有找到浏览器 %s, 你可以输入'Chrome，Firefox or Ie'" % browser))
+
             self.web_driver = driver  # 操作web端元素的webdriver实例
             self.current_driver = "web_driver"  # 标记为web端用例
             self.web_driver.maximize_window()
@@ -180,8 +181,7 @@ class BasePage(object):
                     value = elem.text  # web端获取文本内容
 
                     if value == "":
-                        # app获取文本内容
-                        value = elem.get_attribute("name")
+                        value = elem.get_attribute("name")   # app获取文本内容
 
                     if value != "":
                         self.log.debug("%s%s" % (text, value))
@@ -224,8 +224,7 @@ class BasePage(object):
 
     def home_page_to(self, module):
         """首页待办事项进入功能模块"""
-        #  待办事项中的模块标签
-        module_elem = ("xpath", "//span[contains(text(), '%s')]" % module)
+        module_elem = ("xpath", "//span[contains(text(), '%s')]" % module)  # 待办事项中的模块标签
         result = False
         try:
             if self.displayed(module_elem):
@@ -297,12 +296,9 @@ class BasePage(object):
     def screen_shot(self):
         """截图"""
         try:
-            # 获取当前时间
-            current_time = str(self.common.get_now_time())
-            # 获取调用函数名
-            func_name = sys._getframe().f_back.f_code.co_name
-            # 获取调用行号
-            line_number = sys._getframe().f_back.f_lineno
+            current_time = str(self.common.get_now_time())   # 获取当前时间
+            func_name = sys._getframe().f_back.f_code.co_name  # 获取调用函数名
+            line_number = sys._getframe().f_back.f_lineno  # 获取调用行号
 
             path = self.common.get_result_path(case_name, "%s %s %s.png" % (current_time, func_name, line_number))
             if self.current_driver == "web_driver":  # web端直接截图
@@ -323,15 +319,13 @@ class BasePage(object):
     def case_start(self, principal, api_case_name="", api_case_num=0):
         """用例开始，参数为负责人姓名，api测试名，api测试编号"""
         try:
-            # 获取调用函数名作为截图文件夹名
-            global case_name
+            global case_name  # 获取调用函数名作为截图文件夹名
             if api_case_name == "" and api_case_num == 0:
                 case_name = sys._getframe().f_back.f_code.co_name
                 self.web_case_num += 1
                 self.log.debug("web用例%s：%s，负责人：%s" % (self.web_case_num, case_name, principal))
             else:
-                # 将全局变量case_name重新赋值
-                case_name = api_case_name
+                case_name = api_case_name   # 将全局变量case_name重新赋值
                 self.log.debug("api用例%s：%s，负责人：%s" % (api_case_num, api_case_name, principal))
         except Exception as e:
             self.log.error(e)
@@ -339,8 +333,7 @@ class BasePage(object):
 
     def case_end(self):
         """用例结束"""
-        # "*"号不可改，用于提取用例失败的日志
-        self.log.debug("*" * 100 + "\n")
+        self.log.debug("*" * 100 + "\n")  # "*"号不可改，用于提取用例失败的日志
 
     def case_pass(self):
         """用例通过"""
@@ -348,8 +341,7 @@ class BasePage(object):
 
     def case_failed(self):
         """用例失败"""
-        # "failed!"不可改，用于标记用例失败的日志
-        self.log.debug("=" * 10 + "%s: failed!" % case_name + "=" * 10)
+        self.log.debug("=" * 10 + "%s: failed!" % case_name + "=" * 10)  # "failed!"不可改，用于标记用例失败的日志
 
     def find_elements_tag(self, elements, tag=0):
         """查找元素(一个具体的元素点击和输入时定位)"""
@@ -593,8 +585,7 @@ class BasePage(object):
             y2 = self.app_driver.get_window_size()['height']  # 获取屏幕高度
             # self.log.debug(y2)
 
-            # 判断是否需要滑动
-            while y1 + 200 > y2 or y1 < 100:
+            while y1 + 200 > y2 or y1 < 100:  # 判断是否需要滑动
                 if y1 + 200 > y2:
                     self.swipe(x=0.02, y1=0.85, y2=0.45, t=500)  # 向上滑
                     self.screen_shot()

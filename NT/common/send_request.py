@@ -26,12 +26,9 @@ class SendRequest:
             self.session = requests.session()  # 一个session对象会保持同一个会话中的所有请求之间的cookie信息，此方法只适用于是cookies且没有有效期的，token的没用
 
             # 从配置文件中读取信息
-            # 获取超时时长
-            timeout = self.config.get_api_params("timeout")
-            # 获取headers，并将str转换为dict
-            headers = json.loads(self.config.get_api_params("headers"))
-            # 获取cookie，并将str转换为dict
-            cookie = json.loads(self.config.get_api_params("cookie"))
+            timeout = self.config.get_api_params("timeout")  # 获取超时时长
+            headers = json.loads(self.config.get_api_params("headers"))  # 获取headers，并将str转换为dict
+            cookie = json.loads(self.config.get_api_params("cookie"))  # 获取cookie，并将str转换为dict
             requests.utils.add_dict_to_cookiejar(self.session.cookies, cookie)  # 添加cookie,保持登录
         except Exception as e:
             self.log.error(e)
@@ -45,9 +42,9 @@ class SendRequest:
         try:
             # 修改headers
             host = origin[origin.index("//")+2:]  # 截取"//"后的内容
-            headers["Host"] = host
-            headers["Origin"] = origin
-            self.config.update_api_params("headers", headers)
+            headers["Host"] = host  # 修改Host
+            headers["Origin"] = origin  # 修改Origin
+            self.config.update_api_params("headers", headers)  # 重新写入配置文件
 
             # 解析case_params中的参数
             for param_key, param_value in case_params.items():
@@ -77,8 +74,7 @@ class SendRequest:
             elif method == "post":
                 response = self.session.post(url=url, data=body, headers=headers, files=file,
                                              timeout=float(timeout), verify=False)
-            # 请求成功后更新cookie
-            self.get_cookie(response)
+            self.get_cookie(response)  # 请求成功后更新cookie
             return response
         except requests.exceptions.ConnectionError as e:
             self.log.error(e)
