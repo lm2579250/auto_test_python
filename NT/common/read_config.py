@@ -41,9 +41,9 @@ class ReadConfig(object):
         except Exception as e:
             raise Exception("ReadConfig.__init__异常 %s" % e)
 
-    def update_api_params(self, key, value):
+    def update_api_params(self, value):
         """"更新配置文件中的headers"""
-        self.cf.set("api_params", key, json.dumps(value))  # 转换为str
+        self.cf.set("api_params", "headers", json.dumps(value))  # 转换为str
         self.cf.write(open(self.config_path, "w", encoding="utf-8"))
 
     def get_web_param(self, value):
@@ -57,7 +57,7 @@ class ReadConfig(object):
         return value
 
     def get_api_params(self, name):
-        """传输协议，项目域名，端口，超时时长,cookie,headers"""
+        """headers, timeout"""
         value = self.cf.get("api_params", name)
         return value
 

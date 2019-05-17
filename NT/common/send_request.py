@@ -20,32 +20,24 @@ class SendRequest:
 
     def __init__(self):
         try:
-            global timeout, headers
+            global headers, timeout
             self.log = MyLog.get_log().logger
             self.config = ReadConfig()
             self.session = requests.session()  # 一个session对象会保持同一个会话中的所有请求之间的cookie信息，此方法只适用于是cookies且没有有效期的，token的没用
 
             # 从配置文件中读取信息
-            timeout = self.config.get_api_params("timeout")  # 获取超时时长
             headers = json.loads(self.config.get_api_params("headers"))  # 获取headers，并将str转换为dict
-            cookie = json.loads(self.config.get_api_params("cookie"))  # 获取cookie，并将str转换为dict
-            requests.utils.add_dict_to_cookiejar(self.session.cookies, cookie)  # 添加cookie,保持登录
+            timeout = self.config.get_api_params("timeout")  # 获取超时时长
         except Exception as e:
             self.log.error(e)
             raise Exception("出现异常！")
 
     def send_request(self, origin, case_params):
         """发送请求，origin为request中的origin，case_params为测试用例中的数据"""
-        method, url, body, file = "", "", "", {}
+        method, url, body, file = "", "", "", {}  # 请求方式，请求地址，参数，上传的文件地址
         response = None
 
         try:
-            # 修改headers
-            host = origin[origin.index("//")+2:]  # 截取"//"后的内容
-            headers["Host"] = host  # 修改Host
-            headers["Origin"] = origin  # 修改Origin
-            self.config.update_api_params("headers", headers)  # 重新写入配置文件
-
             # 解析case_params中的参数
             for param_key, param_value in case_params.items():
                 if isinstance(param_value, str):  # 判断是否是str类型
@@ -69,12 +61,12 @@ class SendRequest:
 
             # 不验证ssl, verify=False
             if method == "get":
-                response = self.session.get(url=url, params=body, headers=headers, timeout=float(timeout),
+                response = self.session.get(url=url, headers=headers, params=body, timeout=float(timeout),
                                             verify=False)
             elif method == "post":
-                response = self.session.post(url=url, data=body, headers=headers, files=file,
+                response = self.session.post(url=url, headers=headers, data=body, files=file,
                                              timeout=float(timeout), verify=False)
-            self.get_cookie(response)  # 请求成功后更新cookie
+            self.keep_login(response)  # 保持登录
             return response
         except requests.exceptions.ConnectionError as e:
             self.log.error(e)
@@ -95,12 +87,18 @@ class SendRequest:
             self.log.error(e)
             raise Exception("请求异常！")
 
-    def get_cookie(self, response):
-        """保存cookie"""
+    def keep_login(self, response):
+        """保持登录"""
         try:
-            cookie = response.cookies.get_dict()
-            if cookie != {}:
-                self.config.update_api_params("cookie", cookie)  # 写入配置文件中
+            headers_res = response.headers  # 获取响应头
+            if "Token" in headers_res:
+                token = headers_res["token"]
+                headers["Token"] = token
+                self.config.update_api_params(headers)  # 写入配置文件中
+            elif "Set-Cookie" in headers_res:
+                cookie = headers_res["Set-Cookie"]
+                headers["Cookie"] = cookie
+                self.config.update_api_params(headers)  # 写入配置文件中
         except Exception as e:
             self.log.error(e)
             raise Exception("保存cookie时异常！")
