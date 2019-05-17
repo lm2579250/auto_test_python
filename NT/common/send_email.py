@@ -43,9 +43,7 @@ class SendEmail(object):
 
     def with_zip(self):
         """附件以zip格式发送邮件"""
-
-        # 发送失败后重试3次
-        while self.result is False and self.num < 3:
+        while self.result is False and self.num < 3:  # 发送失败后重试3次
             try:
                 # 提取错误用例负责人姓名
                 file_list = os.listdir(self.log_dir)  # 获取时间目录下的文件列表
@@ -75,9 +73,7 @@ class SendEmail(object):
 
     def with_file(self):
         """附件以单个文件形式发送邮件"""
-
-        # 发送失败后重试3次
-        while self.result is False and self.num < 3:
+        while self.result is False and self.num < 3:  # 发送失败后重试3次
             try:
                 file_list = os.listdir(self.log_dir)  # 获取时间目录下的文件列表
                 for file in file_list:
